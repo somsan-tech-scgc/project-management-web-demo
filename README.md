@@ -1,18 +1,4 @@
-# Welcome to React Router!
-
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+# SCGC Web Demo
 
 ## Getting Started
 
@@ -40,6 +26,23 @@ Create a production build:
 
 ```bash
 npm run build
+```
+
+### Flow
+
+https://miro.com/app/board/uXjVJOVHyq0=/
+
+```mermaid
+   flowchart TD
+
+   p1(Portfolio Dashboard Page) --> |click on project card then show| p2(Project Detail Page)
+   p2 --> |click on Gate#n then show| p2.1(Review Document Gate#n Page)
+   p2.1 --> |click on process btn then show| p2.2(Assign Committee Page)
+   p2.2 --> |click on process btn then show| p2.3(Schedule Review Meeting Page)
+
+
+    p1 --> |click on notification tab then show| p3(Notification Page)
+    p1 --> |click on calendar tab then show| p4(Calendar page)
 ```
 
 ## Deployment
