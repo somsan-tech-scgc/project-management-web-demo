@@ -1,5 +1,17 @@
 # SCGC Web Demo
 
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Development](#development)
+- [Building for Production](#building-for-production)
+- [Flow](#flow)
+- [Deployment](#deployment)
+  - [Docker Deployment](#docker-deployment)
+  - [DIY Deployment](#diy-deployment)
+- [Styling](#styling)
+
 ## Getting Started
 
 ### Installation
@@ -28,9 +40,13 @@ Create a production build:
 npm run build
 ```
 
-### Flow
+## Flow
+
+### Miro
 
 https://miro.com/app/board/uXjVJOVHyq0=/
+
+### Diagram
 
 ```mermaid
    flowchart TD
