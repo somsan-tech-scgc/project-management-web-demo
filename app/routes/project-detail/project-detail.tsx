@@ -1,12 +1,28 @@
 import { useState } from "react";
 
-import { ArrowLeft, Bell, Calendar, CheckCircle2, Circle, Clock, Upload, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Bell,
+  Calendar,
+  CheckCircle2,
+  Circle,
+  Clock,
+  Upload,
+  User,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { Badge } from "~/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Link, useParams } from "react-router";
@@ -39,8 +55,18 @@ const projectData = {
       { id: 3, task: "Outline project deliverables", completed: false },
     ],
     activities: [
-      { user: "Sarah Chen", action: "uploaded 'Project Plan v1.0'", time: "2 days ago", avatar: "SC" },
-      { user: "Alex Bennett", action: "approved 'Project Plan v1.0'", time: "2 days ago", avatar: "AB" },
+      {
+        user: "Sarah Chen",
+        action: "uploaded 'Project Plan v1.0'",
+        time: "2 days ago",
+        avatar: "SC",
+      },
+      {
+        user: "Alex Bennett",
+        action: "approved 'Project Plan v1.0'",
+        time: "2 days ago",
+        avatar: "AB",
+      },
     ],
     reviewers: [
       { name: "Sarah Chen", role: "Product Manager", decision: "Approved" },
@@ -52,75 +78,54 @@ const projectData = {
 export default function ProjectDetail() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
-  
-  const project = projectData[id as keyof typeof projectData] || projectData["PRJ-001"];
+
+  const project =
+    projectData[id as keyof typeof projectData] || projectData["PRJ-001"];
 
   const getStatusIcon = (status: string) => {
-    if (status === "Completed") return <CheckCircle2 className="h-5 w-5 text-status-green" />;
-    if (status === "In Progress") return <Clock className="h-5 w-5 text-primary" />;
+    if (status === "Completed")
+      return <CheckCircle2 className="h-5 w-5 text-status-green" />;
+    if (status === "In Progress")
+      return <Clock className="h-5 w-5 text-primary" />;
     return <Circle className="h-5 w-5 text-muted-foreground" />;
   };
 
   const getStatusBadge = (status: string) => {
-    if (status === "Approved") return <Badge className="bg-status-green-foreground text-status-green border-0">Approved</Badge>;
-    if (status === "Pending") return <Badge className="bg-status-amber-foreground text-status-amber border-0">Pending</Badge>;
+    if (status === "Approved")
+      return (
+        <Badge className="bg-status-green-foreground text-status-green border-0">
+          Approved
+        </Badge>
+      );
+    if (status === "Pending")
+      return (
+        <Badge className="bg-status-amber-foreground text-status-amber border-0">
+          Pending
+        </Badge>
+      );
     return <Badge variant="secondary">{status}</Badge>;
   };
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">PF</span>
-                </div>
-                <span className="font-semibold text-lg">ProjectFlow</span>
-              </div>
-              <nav className="flex items-center gap-6">
-                <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Dashboard
-                </Link>
-                <Link to="/" className="text-sm font-medium text-primary">
-                  Projects
-                </Link>
-                <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Reviews
-                </Link>
-                <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  People
-                </Link>
-              </nav>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
-              </Button>
-              <Avatar>
-                <AvatarFallback className="bg-primary text-primary-foreground">
-                  <User className="h-4 w-4" />
-                </AvatarFallback>
-              </Avatar>
-            </div>
-          </div>
-        </div>
-      </header>
-
       {/* Project Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-6 py-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+          >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Link>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Project: {project.name}</h1>
+              <h1 className="text-3xl font-bold mb-2">
+                Project: {project.name}
+              </h1>
               <p className="text-sm text-muted-foreground">
-                Managed by: {project.manager} · Last updated: {project.lastUpdated}
+                Managed by: {project.manager} · Last updated:{" "}
+                {project.lastUpdated}
               </p>
             </div>
             <div className="flex gap-3">
@@ -134,7 +139,7 @@ export default function ProjectDetail() {
               </Button>
             </div>
           </div>
-          
+
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList>
@@ -158,7 +163,9 @@ export default function ProjectDetail() {
                 <div className="space-y-2 mb-6">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Timeline</span>
-                    <span className="font-medium">{project.progress}% Complete</span>
+                    <span className="font-medium">
+                      {project.progress}% Complete
+                    </span>
                   </div>
                   <Progress value={project.progress} className="h-2" />
                 </div>
@@ -170,7 +177,9 @@ export default function ProjectDetail() {
                       {getStatusIcon(gate.status)}
                       <div>
                         <p className="font-medium">{gate.name}</p>
-                        <p className="text-sm text-muted-foreground">{gate.status}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {gate.status}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -188,7 +197,9 @@ export default function ProjectDetail() {
                       {getStatusIcon(step.status)}
                       <div>
                         <p className="font-medium">{step.name}</p>
-                        <p className="text-sm text-muted-foreground">{step.status}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {step.status}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -210,9 +221,12 @@ export default function ProjectDetail() {
                       </Avatar>
                       <div className="flex-1">
                         <p className="text-sm">
-                          <span className="font-medium">{activity.user}</span> {activity.action}
+                          <span className="font-medium">{activity.user}</span>{" "}
+                          {activity.action}
                         </p>
-                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {activity.time}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -223,19 +237,29 @@ export default function ProjectDetail() {
             {/* Reviewer Decisions */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Reviewer Decisions</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Reviewer Decisions
+                </h2>
                 <div className="space-y-4">
                   {project.reviewers.map((reviewer, index) => (
-                    <div key={index} className="flex items-center justify-between">
+                    <div
+                      key={index}
+                      className="flex items-center justify-between"
+                    >
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                            {reviewer.name.split(' ').map(n => n[0]).join('')}
+                            {reviewer.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <p className="font-medium">{reviewer.name}</p>
-                          <p className="text-sm text-muted-foreground">{reviewer.role}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {reviewer.role}
+                          </p>
                         </div>
                       </div>
                       {getStatusBadge(reviewer.decision)}
@@ -262,7 +286,9 @@ export default function ProjectDetail() {
                   <TableBody>
                     {project.documents.map((doc, index) => (
                       <TableRow key={index}>
-                        <TableCell className="font-medium">{doc.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {doc.name}
+                        </TableCell>
                         <TableCell>{getStatusBadge(doc.status)}</TableCell>
                       </TableRow>
                     ))}
@@ -278,7 +304,10 @@ export default function ProjectDetail() {
                 <div className="space-y-3">
                   {project.checklist.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
-                      <Checkbox id={`task-${item.id}`} checked={item.completed} />
+                      <Checkbox
+                        id={`task-${item.id}`}
+                        checked={item.completed}
+                      />
                       <label
                         htmlFor={`task-${item.id}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
