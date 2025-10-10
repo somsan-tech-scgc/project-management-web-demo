@@ -15,6 +15,7 @@ interface ProjectCardProps {
   endDate: string;
   nextReview: string;
   gateStatus: string;
+  onClick?: () => void;
 }
 
 export function ProjectCard({
@@ -28,6 +29,7 @@ export function ProjectCard({
   endDate,
   nextReview,
   gateStatus,
+  onClick
 }: ProjectCardProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -77,7 +79,7 @@ export function ProjectCard({
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button variant="outline" className="w-full gap-2">
+        <Button variant="outline" className="w-full gap-2" onClick={onClick}>
           <Eye className="h-4 w-4" />
           View
         </Button>

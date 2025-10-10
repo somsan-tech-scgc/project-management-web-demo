@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { Search, Filter, Grid3x3, LayoutList } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Header } from "./header";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { ProjectCard } from "./project-card";
+import { Link } from "react-router";
 
 const projects = [
   {
@@ -84,11 +91,10 @@ const projects = [
 const Index = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="container mx-auto px-6 py-8">
         <div className="flex items-start justify-between mb-8">
           <div>
@@ -101,12 +107,9 @@ const Index = () => {
         <div className="flex items-center gap-4 mb-8">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search projects..."
-              className="pl-10"
-            />
+            <Input placeholder="Search projects..." className="pl-10" />
           </div>
-          
+
           <Button variant="outline" size="icon">
             <Filter className="h-4 w-4" />
           </Button>
@@ -121,7 +124,9 @@ const Index = () => {
               <SelectItem value="feasibility">Feasibility</SelectItem>
               <SelectItem value="design">Design</SelectItem>
               <SelectItem value="development">Development</SelectItem>
-              <SelectItem value="post-implementation">Post-Implementation</SelectItem>
+              <SelectItem value="post-implementation">
+                Post-Implementation
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -145,12 +150,21 @@ const Index = () => {
           </div>
         </div>
 
-        <div className={viewMode === "grid" 
-          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-          : "space-y-4"
-        }>
+        <div
+          className={
+            viewMode === "grid"
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              : "space-y-4"
+          }
+        >
           {projects.map((project) => (
-            <ProjectCard key={project.code} {...project} />
+            <Link
+              key={project.code}
+              to={`/projects/${project.code}`}
+              style={{ textDecoration: "none" }}
+            >
+              <ProjectCard {...project} />
+            </Link>
           ))}
         </div>
       </main>
