@@ -101,11 +101,10 @@ const Index = () => {
             <h2 className="text-3xl font-bold mb-1">Portfolio Dashboard</h2>
             <p className="text-muted-foreground">Welcome back,</p>
           </div>
-          <Button variant="outline">Reset Demo Data</Button>
         </div>
 
         <div className="flex items-center gap-4 mb-8">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input placeholder="Search projects..." className="pl-10" />
           </div>

@@ -19,7 +19,11 @@ export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
                     PF
                   </span>
                 </div>
-                <span className="font-semibold text-lg">ProjectFlow</span>
+                <Link to="/">
+                  <span className="font-semibold text-lg">
+                    Project Gate Review
+                  </span>
+                </Link>
               </div>
               <nav className="flex items-center gap-6">
                 <Link
@@ -28,27 +32,17 @@ export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
                 >
                   Dashboard
                 </Link>
-                <Link to="/" className="text-sm font-medium text-primary">
-                  Projects
-                </Link>
-                <Link
-                  to="/"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Reviews
-                </Link>
-                <Link
-                  to="/"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  People
+                <Link to="/calendar" className="text-sm font-medium">
+                  Calendar
                 </Link>
               </nav>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
-              </Button>
+              <Link to="/notifications">
+                <Button variant="ghost" size="icon" className="cursor-pointer">
+                  <Bell className="h-5 w-5" />
+                </Button>
+              </Link>
               <Avatar>
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   <User className="h-4 w-4" />
