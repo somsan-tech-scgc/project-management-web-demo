@@ -10,11 +10,11 @@ import {
   Upload,
   User,
 } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
-import { Progress } from "~/components/ui/progress";
-import { Badge } from "~/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -22,9 +22,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router";
 
 const projectData = {
@@ -107,7 +107,7 @@ export default function ProjectDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       {/* Project Header */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-6 py-8">

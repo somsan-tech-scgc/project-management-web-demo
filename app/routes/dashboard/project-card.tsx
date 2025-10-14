@@ -1,8 +1,8 @@
 import { Calendar, Eye } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardFooter } from "~/components/ui/card";
-import { Progress } from "~/components/ui/progress";
-import { Badge } from "~/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 interface ProjectCardProps {
   code: string;
@@ -29,12 +29,12 @@ export function ProjectCard({
   endDate,
   nextReview,
   gateStatus,
-  onClick
+  onClick,
 }: ProjectCardProps) {
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -48,7 +48,10 @@ export function ProjectCard({
             <p className="text-sm text-muted-foreground">{code}</p>
             <h3 className="text-lg font-semibold mt-1">{name}</h3>
           </div>
-          <Badge variant="secondary" className="bg-status-amber-foreground text-status-amber border-0 font-medium whitespace-nowrap">
+          <Badge
+            variant="secondary"
+            className="bg-status-amber-foreground text-status-amber border-0 font-medium whitespace-nowrap"
+          >
             {gateStatus}
           </Badge>
         </div>
@@ -60,14 +63,18 @@ export function ProjectCard({
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Progress</span>
-            <span className="font-medium">Step {currentStep}/{totalSteps}</span>
+            <span className="font-medium">
+              Step {currentStep}/{totalSteps}
+            </span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
-          <span>{startDate} - {endDate}</span>
+          <span>
+            {startDate} - {endDate}
+          </span>
         </div>
 
         <div className="pt-2 border-t">

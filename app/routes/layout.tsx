@@ -1,8 +1,8 @@
 import { Bell, User } from "lucide-react";
 import type { ComponentProps } from "react";
 import { Link, Outlet } from "react-router";
-import { Button } from "~/components/ui/button";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export type LayoutRootProps = ComponentProps<"main">;
 

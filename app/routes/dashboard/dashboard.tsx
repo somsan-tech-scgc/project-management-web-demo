@@ -6,10 +6,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@/components/ui/select";
 import { Header } from "./header";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { ProjectCard } from "./project-card";
 import { Link } from "react-router";
 

@@ -11,7 +11,10 @@ export default [
   layout("routes/layout.tsx", [
     index("routes/dashboard/dashboard.tsx"),
     ...prefix("/projects", [
-      route(":id", "routes/project-detail/project-detail.tsx"),
+      ...prefix(":id", [
+        index("routes/project-detail/project-detail.tsx"),
+        route("pre-review", "routes/project-detail-gates/pre-review-page.tsx"),
+      ]),
     ]),
   ]),
 ] satisfies RouteConfig;
