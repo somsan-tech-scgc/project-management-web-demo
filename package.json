@@ -11,7 +11,8 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "g:api": "openapi-typescript http://43.209.33.153:8081/swagger/v1/swagger.json -o ./app/api/types.ts"
+    "g:api": "openapi-typescript http://43.209.33.153:8081/swagger/v1/swagger.json -o ./app/api/types.ts",
+    "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
