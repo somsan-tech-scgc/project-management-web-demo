@@ -14,6 +14,14 @@ export default [
       ...prefix(":id", [
         index("routes/project-detail/project-detail.tsx"),
         route("pre-review", "routes/project-detail-gates/pre-review-page.tsx"),
+        route(
+          "assign-committee",
+          "routes/project-detail-gates/assign-committee-page.tsx"
+        ),
+        route(
+          "schedule-meeting",
+          "routes/project-detail-gates/schedule-meeting-page.tsx"
+        ),
       ]),
     ]),
   ]),
