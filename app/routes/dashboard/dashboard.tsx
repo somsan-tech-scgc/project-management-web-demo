@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "./project-card";
 import { Link } from "react-router";
+import { $api } from "@/api/client";
 
 const projects = [
   {
@@ -90,6 +91,19 @@ const projects = [
 
 const Index = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  const projectListQuery = $api.useQuery(
+    "post",
+    "/committee-workflow/project/list",
+    {
+      body: {
+        pageIndex: 1,
+        pageSize: 10,
+        searchFilter: "",
+        statusFilter: [],
+      },
+    }
+  );
 
   return (
     <div className="min-h-screen bg-background">

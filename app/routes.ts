@@ -8,6 +8,7 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
+  route("login", "routes/login/login-page.tsx"),
   layout("routes/layout.tsx", [
     index("routes/dashboard/dashboard.tsx"),
     ...prefix("/projects", [
