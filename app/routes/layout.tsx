@@ -1,10 +1,11 @@
 import { Bell, User } from "lucide-react";
 import type { ComponentProps } from "react";
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { UnauthorizedError } from "@/api/client";
 import type { Route } from "../+types/root";
+import { ACCESS_TOKEN_KEY } from "@/constants/auth";
 
 export type LayoutRootProps = ComponentProps<"main">;
 
@@ -24,6 +25,7 @@ export function HydrateFallback() {
 }
 
 export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
+  const navigate = useNavigate();
   return (
     <main {...rest} className="min-h-screen bg-background">
       <header className="border-b bg-card sticky top-0 z-10">
@@ -60,7 +62,15 @@ export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
                   <Bell className="h-5 w-5" />
                 </Button>
               </Link>
-              <Avatar>
+              <Avatar
+                className="cursor-pointer"
+                onClick={() => {
+                  if (confirm("Are you sure you want to log out?")) {
+                    localStorage.removeItem(ACCESS_TOKEN_KEY);
+                    navigate("/login", { replace: true });
+                  }
+                }}
+              >
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
