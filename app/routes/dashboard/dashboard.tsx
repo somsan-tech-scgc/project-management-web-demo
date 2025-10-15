@@ -190,7 +190,7 @@ const Index = () => {
           {projects?.map((project) => (
             <Link
               key={project.code}
-              to={`/projects/${project.code}`}
+              to={`/projects/${project.id}`}
               style={{ textDecoration: "none" }}
             >
               <ProjectCard {...project} />

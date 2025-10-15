@@ -26,6 +26,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router";
+import { $api } from "@/api/client";
+import { useQuery } from "@tanstack/react-query";
 
 const projectData = {
   "PRJ-001": {
@@ -75,12 +77,29 @@ const projectData = {
   },
 };
 
-export default function ProjectDetail() {
+export default function ProjectDetailPage() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
 
-  const project =
-    projectData[id as keyof typeof projectData] || projectData["PRJ-001"];
+  const projectQuery = $api.useQuery(
+    "get",
+    "/committee-workflow/project/{projectId}",
+    {
+      params: {
+        path: {
+          // @ts-expect-error
+          projectId: id,
+        },
+      },
+    },
+    {
+      select(data) {
+        return data?.data;
+      },
+    }
+  );
+
+  const project = projectData["PRJ-001"];
 
   const getStatusIcon = (status: string) => {
     if (status === "Completed")

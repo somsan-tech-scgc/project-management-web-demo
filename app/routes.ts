@@ -15,7 +15,7 @@ export default [
     route("notifications", "routes/notifications/notifications-page.tsx"),
     ...prefix("/projects", [
       ...prefix(":id", [
-        index("routes/project-detail/project-detail.tsx"),
+        index("routes/project-detail/project-detail-page.tsx"),
         route("pre-review", "routes/project-detail-gates/pre-review-page.tsx"),
         route(
           "assign-committee",
