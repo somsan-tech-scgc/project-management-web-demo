@@ -3,8 +3,25 @@ import type { ComponentProps } from "react";
 import { Link, Outlet } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { UnauthorizedError } from "@/api/client";
+import type { Route } from "../+types/root";
 
 export type LayoutRootProps = ComponentProps<"main">;
+
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  const accessToken = localStorage.getItem("accessToken");
+
+  if (!accessToken) {
+    throw new UnauthorizedError("No access token found");
+  }
+
+  return null;
+}
+
+// HydrateFallback is rendered while the client loader is running
+export function HydrateFallback() {
+  return <div>Loading...</div>;
+}
 
 export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
   return (

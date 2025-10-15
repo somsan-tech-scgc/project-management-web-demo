@@ -3,14 +3,18 @@ import {
   Links,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
+  useNavigate,
 } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { UnauthorizedError } from "./api/client";
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -59,6 +63,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
 
+  const navigate = useNavigate();
+
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
@@ -69,6 +75,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     details = error.message;
     stack = error.stack;
   }
+
+  useEffect(() => {
+    if (error instanceof UnauthorizedError) {
+      // Redirect to login page on UnauthorizedError
+      navigate("/login", { replace: true });
+    }
+    // console.error(error);
+  }, [error, navigate]);
 
   return (
     <main className="pt-16 p-4 container mx-auto">

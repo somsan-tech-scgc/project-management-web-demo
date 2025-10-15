@@ -15,7 +15,6 @@ export function LoginForm({
     "/committee-workflow/authentication/login",
     {
       onSuccess: (data) => {
-        console.log("Login successful:", data);
         if (!data?.["data"]?.["accessToken"]) {
           throw new Error("No access token in response");
         }
@@ -40,6 +39,8 @@ export function LoginForm({
         const email = formData.get("username") as string;
         const password = formData.get("password") as string;
 
+        console.log("Form submitted:", Object.fromEntries(formData.entries()));
+
         await loginMutation.mutateAsync({
           body: {
             username: email,
@@ -57,7 +58,7 @@ export function LoginForm({
       <div className="grid gap-6">
         <div className="grid gap-3">
           <Label>Username</Label>
-          <Input id="username" placeholder="m@example.com" required />
+          <Input id="username" name="username" required />
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
@@ -69,7 +70,7 @@ export function LoginForm({
               Forgot your password?
             </a>
           </div>
-          <Input id="password" type="password" required />
+          <Input id="password" name="password" type="password" required />
         </div>
         <Button type="submit" className="w-full">
           Login
