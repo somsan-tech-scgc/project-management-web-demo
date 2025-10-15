@@ -75,17 +75,19 @@ export function LoginForm({
         <Button type="submit" className="w-full">
           Login
         </Button>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={() => {
-            localStorage.setItem("accessToken", "skipped-dev-token");
-            navigate("/");
-          }}
-        >
-          Skip Login (Dev Mode)
-        </Button>
+        {import.meta.env.DEV ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              localStorage.setItem("accessToken", "skipped-dev-token");
+              navigate("/");
+            }}
+          >
+            Skip Login (Dev Mode)
+          </Button>
+        ) : null}
       </div>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
