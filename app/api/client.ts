@@ -1,6 +1,6 @@
 import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
-import type { paths } from "./types";
+import type { paths, components } from "./types";
 import { ACCESS_TOKEN_KEY } from "@/constants/auth";
 
 export const fetchClient = createFetchClient<paths>({
@@ -32,3 +32,5 @@ fetchClient.use({
   },
 });
 export const $api = createClient(fetchClient);
+
+export type Schema = components["schemas"];

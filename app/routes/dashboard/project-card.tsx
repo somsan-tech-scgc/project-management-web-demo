@@ -3,20 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import type { Schema } from "@/api/client";
 
-interface ProjectCardProps {
-  code: string;
-  name: string;
-  budget: number;
+type ProjectCardProps = Schema["CreateProjectRequest"] & {
   progress: number;
   currentStep: number;
   totalSteps: number;
-  startDate: string;
-  endDate: string;
   nextReview: string;
+  onClick: () => void; // Add onClick pro
   gateStatus: string;
-  onClick?: () => void;
-}
+};
 
 export function ProjectCard({
   code,
@@ -57,7 +53,7 @@ export function ProjectCard({
         </div>
 
         <div>
-          <p className="text-2xl font-bold">{formatCurrency(budget)}</p>
+          <p className="text-2xl font-bold">{formatCurrency(budget ?? 0)}</p>
         </div>
 
         <div className="space-y-2">
