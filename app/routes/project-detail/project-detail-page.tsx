@@ -28,9 +28,16 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router";
 import { $api, type Schema } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
-import { formatDate } from "@/lib/utils";
+import {
+  cn,
+  formatDate,
+  formatDateTime,
+  getProjectProgressPercentage,
+} from "@/lib/utils";
+import { GATE_STATUS } from "@/constants/common";
+import { Timeline } from "./timeline";
 
-type Project = Schema['UpdateProjectRequest'];
+type Project = Schema["UpdateProjectRequest"];
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -50,7 +57,7 @@ export default function ProjectDetailPage() {
     {
       select(data) {
         // @ts-expect-error
-        return data?.data! as Project
+        return data?.data! as Project;
       },
     }
   );
@@ -65,26 +72,33 @@ export default function ProjectDetailPage() {
     return <Circle className="h-5 w-5 text-muted-foreground" />;
   };
 
-  const getStatusBadge = (status: string) => {
-    if (status === "Approved")
-      return (
-        <Badge className="bg-status-green-foreground text-status-green border-0">
-          Approved
-        </Badge>
-      );
-    if (status === "Pending")
-      return (
-        <Badge className="bg-status-amber-foreground text-status-amber border-0">
-          Pending
-        </Badge>
-      );
-    return <Badge variant="secondary">{status}</Badge>;
+  const getStatusBadge = (status: keyof typeof GATE_STATUS) => {
+    const statusValue = GATE_STATUS[status];
+    return (
+      <Badge
+        className={cn({
+          "bg-green-500 text-white border-0": statusValue === "Completed",
+          "bg-amber-500 text-white border-0": statusValue === "Pending",
+          "bg-gray-500 text-white border-0": statusValue === "In Progress",
+        })}
+      >
+        {statusValue}
+      </Badge>
+    );
   };
 
   if (projectQuery.isLoading) return <div>Loading...</div>;
 
-  if (projectQuery.isError) return <div>Error: {(projectQuery.error as Error).message}</div>;
+  if (projectQuery.isError)
+    return <div>Error: {(projectQuery.error as Error).message}</div>;
 
+  const progressPercentage =
+    getProjectProgressPercentage(project?.gateSteps ?? []) ?? 0;
+
+  const gateSteps = project?.gateSteps ?? []
+  const currentGateLevel =  project?.projectDetail?.gateLevel
+
+  const currentGate = gateSteps[currentGateLevel]
   return (
     <div>
       {/* Project Header */}
@@ -101,22 +115,26 @@ export default function ProjectDetailPage() {
             <div>
               <h1 className="text-3xl font-bold mb-2">
                 {/* @ts-expect-error */}
-                Project: {project?.projectDetail?.stageGateName}
+                {project?.projectDetail?.stageGateName}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              {/* <p className="text-sm text-muted-foreground">
                 Managed by: {project?.ownerUserId} · Last updated:{" "}
                 {formatDate(new Date())}
-              </p>
+              </p> */}
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" className="gap-2">
-                <Upload className="h-4 w-4" />
-                Upload documents
-              </Button>
-              <Button className="gap-2">
-                <Calendar className="h-4 w-4" />
-                Schedule review
-              </Button>
+              <Link to={`/projects/${id}/pre-review`}>
+                <Button variant="outline" className="gap-2">
+                  <Upload className="h-4 w-4" />
+                  Upload documents
+                </Button>
+              </Link>
+              <Link to={`/projects/${id}/schedule-meeting`}>
+                <Button className="gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Schedule review
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -144,26 +162,26 @@ export default function ProjectDetailPage() {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Timeline</span>
                     <span className="font-medium">
-                      {50}% Complete
+                      {progressPercentage}% Complete
                     </span>
                   </div>
-                  {/* @ts-expect-error */}
-                  <Progress value={project?.projectDetail?.gateLevel ?? 1} className="h-2" />
+                  <Progress value={progressPercentage} className="h-2" />
                 </div>
 
                 <h3 className="font-semibold mb-4">Gates</h3>
                 <div className="space-y-4">
-                  {project?.gates?.map((gate) => (
+                  {/* {gateSteps?.map((gate) => (
                     <div key={gate.id} className="flex items-start gap-3">
                       {getStatusIcon(gate.status)}
                       <div>
                         <p className="font-medium">{gate.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {gate.status}
+                          {GATE_STATUS[gate.status]}
                         </p>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
+                  <Timeline roadmapItems={gateSteps} />
                 </div>
               </CardContent>
             </Card>
@@ -171,7 +189,7 @@ export default function ProjectDetailPage() {
             {/* Gate Details */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Gate 2: Planning</h2>
+                <h2 className="text-xl font-semibold mb-4">Gate {currentGate?.id}: {currentGate?.name}</h2>
                 <div className="space-y-4">
                   {project?.steps?.map((step) => (
                     <div key={step.id} className="flex items-start gap-3">
@@ -182,68 +200,6 @@ export default function ProjectDetailPage() {
                           {step.status}
                         </p>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Activity Feed */}
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Activity Feed</h2>
-                <div className="space-y-4">
-                  {project?.activities.map((activity, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                          {activity.avatar}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="text-sm">
-                          <span className="font-medium">{activity.user}</span>{" "}
-                          {activity.action}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {activity.time}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Reviewer Decisions */}
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">
-                  Reviewer Decisions
-                </h2>
-                <div className="space-y-4">
-                  {project?.reviewers?.map((reviewer, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                            {reviewer.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">{reviewer.name}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {reviewer.role}
-                          </p>
-                        </div>
-                      </div>
-                      {getStatusBadge(reviewer.decision)}
                     </div>
                   ))}
                 </div>
@@ -268,14 +224,9 @@ export default function ProjectDetailPage() {
                     {project?.documents.map((doc, index) => (
                       <TableRow key={doc.id}>
                         <TableCell className="font-medium">
-                          <p className="text-sm font-medium">
                           {doc.name}
-                          </p>
-                          <span className="text-xs text-muted-foreground">
-                            {doc.checkListText}
-                          </span>
                         </TableCell>
-                        
+
                         <TableCell>{getStatusBadge(doc.status)}</TableCell>
                       </TableRow>
                     ))}
@@ -289,17 +240,17 @@ export default function ProjectDetailPage() {
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Checklist</h2>
                 <div className="space-y-3">
-                  {project?.checklist?.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3">
+                  {project?.documents?.map((doc) => (
+                    <div key={doc.id} className="flex items-center gap-3">
                       <Checkbox
-                        id={`task-${item.id}`}
-                        checked={item.completed}
+                        id={`task-${doc.id}`}
+                        // checked={item.completed}
                       />
                       <label
-                        htmlFor={`task-${item.id}`}
+                        htmlFor={`task-${doc.id}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        {item.task}
+                        {doc.checkListText ?? doc.name}
                       </label>
                     </div>
                   ))}
@@ -307,6 +258,69 @@ export default function ProjectDetailPage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-6">
+          {/* Activity Feed */}
+          <Card className="col-span-1">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Activity Feed</h2>
+              <div className="space-y-4">
+                {project?.activities.map((activity, index) => (
+                  <div key={activity.id} className="flex items-start gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                        {index + 1}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <p className="text-sm">
+                        {/* <span className="font-medium">{activity.user}</span>{" "} */}
+                        {activity.detail}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatDateTime(new Date(activity.createdDate))}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Reviewer Decisions */}
+          {/* <Card className="flex-1 w-full">
+                <CardContent className="p-6">
+                  <h2 className="text-xl font-semibold mb-4">
+                    Reviewer Decisions
+                  </h2>
+                  <div className="space-y-4">
+                    {project?.commitee?.map((commitees, index) => (
+                      <div
+                        key={commitees.id}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                              {commitees.fullName
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{reviewer.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {reviewer.role}
+                            </p>
+                          </div>
+                        </div>
+                        {getStatusBadge(reviewer.decision)}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card> */}
         </div>
       </div>
     </div>

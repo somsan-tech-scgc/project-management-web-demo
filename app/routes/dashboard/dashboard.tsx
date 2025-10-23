@@ -123,7 +123,7 @@ const Index = () => {
   console.log(projects);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header />
 
       <main className="container mx-auto px-6 py-8">

@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AttendeeCard } from "./attendee-card";
+import { useNavigate } from "react-router";
 
 export default function ScheduleMeetingPage() {
   const [meetingTitle, setMeetingTitle] = useState("");
@@ -19,6 +20,8 @@ export default function ScheduleMeetingPage() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
+
+  const navigate = useNavigate();
 
   const handleScheduleMeeting = () => {
     console.log("Scheduling meeting:", {
@@ -29,6 +32,7 @@ export default function ScheduleMeetingPage() {
       endTime,
       location,
     });
+    navigate(`/notifications`);
   };
 
   return (
