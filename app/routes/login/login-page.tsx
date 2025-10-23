@@ -20,28 +20,36 @@ export function HydrateFallback() {
 
 export default function LoginPage() {
   return (
-    <div className="grid min-h-svh lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10">
-        <div className="flex justify-center gap-2 md:justify-start">
-          <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
+    <div className="relative">
+      <div className="grid min-h-svh lg:grid-cols-2 absolute inset-0">
+        <div className="bg-background flex flex-col gap-4 p-6 md:p-10">
+          <div className="flex justify-center gap-2 md:justify-start">
+            <a href="#" className="flex items-center gap-2 font-medium">
+              <div className="bg-none text-primary-foreground flex size-6 items-center justify-center rounded-md">
+                <GalleryVerticalEnd className="size-4" />
+              </div>
+              <span className="font-semibold text-lg text-primary">Project Gate Review</span>
+            </a>
+          </div>
+          <div className="flex flex-1 items-center justify-center">
+            <div className="w-full max-w-xs">
+              <LoginForm />
             </div>
-            <span className="font-semibold text-lg">Project Gate Review</span>
-          </a>
-        </div>
-        <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <LoginForm />
           </div>
         </div>
-      </div>
-      <div className="bg-muted relative hidden lg:block">
-        <img
-          src="/placeholder.svg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+        <div className="relative hidden lg:block">
+          <div className="absolute inset-0 bg-primary/50 bg-blend-darken backdrop-brightness-75"></div>
+          <video
+            onLoad={function (element) {
+              element.currentTarget.playbackRate = 0.75;
+            }}
+            src="/login.mp4"
+            className="w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+          />
+        </div>
       </div>
     </div>
   );

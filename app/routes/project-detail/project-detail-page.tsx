@@ -26,56 +26,11 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router";
-import { $api } from "@/api/client";
+import { $api, type Schema } from "@/api/client";
 import { useQuery } from "@tanstack/react-query";
+import { formatDate } from "@/lib/utils";
 
-const projectData = {
-  "PRJ-001": {
-    code: "PRJ-001",
-    name: "Titan",
-    manager: "Alex Bennett",
-    lastUpdated: "2 days ago",
-    progress: 60,
-    currentGate: 2,
-    gates: [
-      { id: 1, name: "Gate 1: Initiation", status: "Completed" },
-      { id: 2, name: "Gate 2: Planning", status: "In Progress" },
-      { id: 3, name: "Gate 3: Execution", status: "Upcoming" },
-    ],
-    steps: [
-      { id: 1, name: "Step 1: Define Project Scope", status: "Completed" },
-      { id: 2, name: "Step 2: Create Project Plan", status: "In Progress" },
-      { id: 3, name: "Step 3: Resource Allocation", status: "Upcoming" },
-    ],
-    documents: [
-      { name: "Project Plan v1.0", status: "Approved" },
-      { name: "Resource Allocation", status: "Pending" },
-    ],
-    checklist: [
-      { id: 1, task: "Define project objectives", completed: true },
-      { id: 2, task: "Identify key stakeholders", completed: true },
-      { id: 3, task: "Outline project deliverables", completed: false },
-    ],
-    activities: [
-      {
-        user: "Sarah Chen",
-        action: "uploaded 'Project Plan v1.0'",
-        time: "2 days ago",
-        avatar: "SC",
-      },
-      {
-        user: "Alex Bennett",
-        action: "approved 'Project Plan v1.0'",
-        time: "2 days ago",
-        avatar: "AB",
-      },
-    ],
-    reviewers: [
-      { name: "Sarah Chen", role: "Product Manager", decision: "Approved" },
-      { name: "David Lee", role: "Engineering Lead", decision: "Pending" },
-    ],
-  },
-};
+type Project = Schema['UpdateProjectRequest'];
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -94,12 +49,13 @@ export default function ProjectDetailPage() {
     },
     {
       select(data) {
-        return data?.data;
+        // @ts-expect-error
+        return data?.data! as Project
       },
     }
   );
 
-  const project = projectData["PRJ-001"];
+  const project = projectQuery.data! as Project;
 
   const getStatusIcon = (status: string) => {
     if (status === "Completed")
@@ -125,6 +81,10 @@ export default function ProjectDetailPage() {
     return <Badge variant="secondary">{status}</Badge>;
   };
 
+  if (projectQuery.isLoading) return <div>Loading...</div>;
+
+  if (projectQuery.isError) return <div>Error: {(projectQuery.error as Error).message}</div>;
+
   return (
     <div>
       {/* Project Header */}
@@ -140,11 +100,12 @@ export default function ProjectDetailPage() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">
-                Project: {project.name}
+                {/* @ts-expect-error */}
+                Project: {project?.projectDetail?.stageGateName}
               </h1>
               <p className="text-sm text-muted-foreground">
-                Managed by: {project.manager} · Last updated:{" "}
-                {project.lastUpdated}
+                Managed by: {project?.ownerUserId} · Last updated:{" "}
+                {formatDate(new Date())}
               </p>
             </div>
             <div className="flex gap-3">
@@ -160,13 +121,13 @@ export default function ProjectDetailPage() {
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
+          {/* <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
               <TabsTrigger value="members">Members</TabsTrigger>
             </TabsList>
-          </Tabs>
+          </Tabs> */}
         </div>
       </div>
 
@@ -183,15 +144,16 @@ export default function ProjectDetailPage() {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Timeline</span>
                     <span className="font-medium">
-                      {project.progress}% Complete
+                      {50}% Complete
                     </span>
                   </div>
-                  <Progress value={project.progress} className="h-2" />
+                  {/* @ts-expect-error */}
+                  <Progress value={project?.projectDetail?.gateLevel ?? 1} className="h-2" />
                 </div>
 
                 <h3 className="font-semibold mb-4">Gates</h3>
                 <div className="space-y-4">
-                  {project.gates.map((gate) => (
+                  {project?.gates?.map((gate) => (
                     <div key={gate.id} className="flex items-start gap-3">
                       {getStatusIcon(gate.status)}
                       <div>
@@ -211,7 +173,7 @@ export default function ProjectDetailPage() {
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Gate 2: Planning</h2>
                 <div className="space-y-4">
-                  {project.steps.map((step) => (
+                  {project?.steps?.map((step) => (
                     <div key={step.id} className="flex items-start gap-3">
                       {getStatusIcon(step.status)}
                       <div>
@@ -231,7 +193,7 @@ export default function ProjectDetailPage() {
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Activity Feed</h2>
                 <div className="space-y-4">
-                  {project.activities.map((activity, index) => (
+                  {project?.activities.map((activity, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-primary text-primary-foreground text-xs">
@@ -260,7 +222,7 @@ export default function ProjectDetailPage() {
                   Reviewer Decisions
                 </h2>
                 <div className="space-y-4">
-                  {project.reviewers.map((reviewer, index) => (
+                  {project?.reviewers?.map((reviewer, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between"
@@ -303,11 +265,17 @@ export default function ProjectDetailPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {project.documents.map((doc, index) => (
-                      <TableRow key={index}>
+                    {project?.documents.map((doc, index) => (
+                      <TableRow key={doc.id}>
                         <TableCell className="font-medium">
+                          <p className="text-sm font-medium">
                           {doc.name}
+                          </p>
+                          <span className="text-xs text-muted-foreground">
+                            {doc.checkListText}
+                          </span>
                         </TableCell>
+                        
                         <TableCell>{getStatusBadge(doc.status)}</TableCell>
                       </TableRow>
                     ))}
@@ -321,7 +289,7 @@ export default function ProjectDetailPage() {
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Checklist</h2>
                 <div className="space-y-3">
-                  {project.checklist.map((item) => (
+                  {project?.checklist?.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
                       <Checkbox
                         id={`task-${item.id}`}

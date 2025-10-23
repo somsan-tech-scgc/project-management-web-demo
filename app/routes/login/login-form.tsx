@@ -23,6 +23,7 @@ export function LoginForm({
       },
       onError: (error) => {
         console.error("Login failed:", error);
+        alert('Login failed');
         // Handle login error, e.g., show error message
       },
     }
