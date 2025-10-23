@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import type { Schema } from "@/api/client";
 import { PROJECT_STATUS } from "@/constants/common";
+import { formatDate } from "@/lib/utils";
 
 type ProjectCardProps = Schema["CreateProjectRequest"] & {
   progress: number;
@@ -28,6 +29,9 @@ export function ProjectCard({
   gateStatus,
   onClick,
   status,
+  department,
+  currentGateLevel = 1,
+  totalGate = 1,
 }: ProjectCardProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -36,6 +40,9 @@ export function ProjectCard({
     }).format(amount) + ' ฿';
   };
 
+  const progressPercentage = ((currentGateLevel / totalGate) * 100) ?? 0;
+
+
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
       <CardContent className="p-6 space-y-4">
@@ -43,10 +50,11 @@ export function ProjectCard({
           <div>
             <p className="text-sm text-muted-foreground">{code}</p>
             <h3 className="text-lg font-semibold mt-1">{name}</h3>
+            <p className="text-xs text-muted-foreground">Department: {department}</p>
           </div>
           <Badge
             variant="default"
-            
+
           >
             {PROJECT_STATUS[status]}
           </Badge>
@@ -60,16 +68,16 @@ export function ProjectCard({
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Progress</span>
             <span className="font-medium">
-              Step {currentStep}/{totalSteps}
+              Step {currentGateLevel}/{totalGate}
             </span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progressPercentage} className="h-2" />
         </div>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
           <span>
-            {startDate} - {endDate}
+            { formatDate(new Date(startDate ?? ''))} - {formatDate(new Date(endDate ?? ''))}
           </span>
         </div>
 
