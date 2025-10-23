@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import type { Schema } from "@/api/client";
+import { PROJECT_STATUS } from "@/constants/common";
 
 type ProjectCardProps = Schema["CreateProjectRequest"] & {
   progress: number;
@@ -26,14 +27,13 @@ export function ProjectCard({
   nextReview,
   gateStatus,
   onClick,
+  status,
 }: ProjectCardProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(amount) + ' ฿';
   };
 
   return (
@@ -45,10 +45,10 @@ export function ProjectCard({
             <h3 className="text-lg font-semibold mt-1">{name}</h3>
           </div>
           <Badge
-            variant="secondary"
-            className="bg-status-amber-foreground text-status-amber border-0 font-medium whitespace-nowrap"
+            variant="default"
+            
           >
-            {gateStatus}
+            {PROJECT_STATUS[status]}
           </Badge>
         </div>
 
@@ -73,12 +73,12 @@ export function ProjectCard({
           </span>
         </div>
 
-        <div className="pt-2 border-t">
+        {/* <div className="pt-2 border-t">
           <p className="text-sm">
             <span className="text-muted-foreground">Next Review: </span>
             <span className="font-medium text-foreground">{nextReview}</span>
           </p>
-        </div>
+        </div> */}
       </CardContent>
 
       <CardFooter className="p-6 pt-0">

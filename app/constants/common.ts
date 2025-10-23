@@ -9,6 +9,7 @@ export const GATE_STATUS = {
 export const PROJECT_STATUS = {
   2: "Completed",
   1: "In Progress",
+  0: "Pending",
 } as const;
 
 export const DOCUMENT_STATUS = {
