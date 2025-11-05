@@ -31,7 +31,7 @@ export type Document = {
   readonly updatedAt: Date;
 };
 
-export function useProjectDetail(projectId: number) {
+export function useProjectDetail(projectId?: number | string) {
   const projectDetailQuery = $api.useQuery(
     "get",
     "/committee-workflow/project/{projectId}",
@@ -39,13 +39,13 @@ export function useProjectDetail(projectId: number) {
       params: {
         path: {
           // @ts-expect-error
-          projectId: projectId,
+          projectId: projectId!,
         },
       },
     },
     {
       enabled: !!projectId,
-      select(data) {
+      select(data): ProjectDetailResponse["data"] {
         // @ts-expect-error
         return data?.data as unknown as ProjectDetailResponse["data"];
       },

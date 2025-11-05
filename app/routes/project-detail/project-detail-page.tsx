@@ -36,33 +36,20 @@ import {
 } from "@/lib/utils";
 import { GATE_STATUS } from "@/constants/common";
 import { Timeline } from "./timeline";
+import { useProjectDetail, type ProjectDetailResponse } from "@/hooks/use-project-detail";
+import { useCommittees } from "@/hooks/use-committee";
 
-type Project = Schema["UpdateProjectRequest"];
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
 
-  const projectQuery = $api.useQuery(
-    "get",
-    "/committee-workflow/project/{projectId}",
-    {
-      params: {
-        path: {
-          // @ts-expect-error
-          projectId: id,
-        },
-      },
-    },
-    {
-      select(data) {
-        // @ts-expect-error
-        return data?.data! as Project;
-      },
-    }
-  );
+  const projectQuery = useProjectDetail(id);
 
-  const project = projectQuery.data! as Project;
+  const project = projectQuery.data! as unknown as ProjectDetailResponse['data'];
+
+  const committeesQuery = useCommittees();
+  const committees = committeesQuery.data! ?? []
 
   const getStatusIcon = (status: string) => {
     if (status === "Completed")
@@ -99,6 +86,8 @@ export default function ProjectDetailPage() {
   const currentGateLevel =  project?.projectDetail?.gateLevel
 
   const currentGate = gateSteps[currentGateLevel]
+
+  const lastUpdated = project?.activities?.at(-1)?.createdDate ? formatDateTime(new Date(project.activities.at(-1)?.createdDate)) : '-'
   return (
     <div>
       {/* Project Header */}
@@ -117,10 +106,10 @@ export default function ProjectDetailPage() {
                 {/* @ts-expect-error */}
                 {project?.projectDetail?.stageGateName}
               </h1>
-              {/* <p className="text-sm text-muted-foreground">
-                Managed by: {project?.ownerUserId} · Last updated:{" "}
-                {formatDate(new Date())}
-              </p> */}
+              <p className="text-sm text-muted-foreground">
+                Managed by: {committees?.[0]?.title} {committees?.[0]?.firstName} {committees?.[0]?.lastName} · Last updated:{" "} <span className="font-medium">{lastUpdated}</span>
+            
+              </p>
             </div>
             <div className="flex gap-3">
               <Link to={`/projects/${id}/pre-review`}>
