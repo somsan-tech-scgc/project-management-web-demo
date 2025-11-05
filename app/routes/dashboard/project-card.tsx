@@ -3,9 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import type { Schema } from "@/api/client";
+import { $api, type Schema } from "@/api/client";
 import { PROJECT_STATUS } from "@/constants/common";
 import { formatDate } from "@/lib/utils";
+import {
+  useProjectDetail,
+  type ProjectDetailResponse,
+} from "@/hooks/use-project-detail";
 
 type ProjectCardProps = Schema["CreateProjectRequest"] & {
   progress: number;
@@ -17,6 +21,7 @@ type ProjectCardProps = Schema["CreateProjectRequest"] & {
 };
 
 export function ProjectCard({
+  id,
   code,
   name,
   budget,
@@ -25,7 +30,7 @@ export function ProjectCard({
   totalSteps,
   startDate,
   endDate,
-  nextReview,
+  nextReview = new Date().toISOString(),
   gateStatus,
   onClick,
   status,
@@ -34,14 +39,20 @@ export function ProjectCard({
   totalGate = 1,
 }: ProjectCardProps) {
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount) + ' ฿';
+    return (
+      new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount) + " ฿"
+    );
   };
 
-  const progressPercentage = ((currentGateLevel / totalGate) * 100) ?? 0;
+  const progressPercentage =
+    ((currentGateLevel ?? 0) / (totalGate ?? 0)) * 100 ?? 0;
 
+  const projectDetailQuery = useProjectDetail(id);
+  const projectDetail =
+    projectDetailQuery.data as unknown as ProjectDetailResponse["data"];
 
   return (
     <Card className="overflow-hidden transition-shadow hover:shadow-md">
@@ -50,13 +61,14 @@ export function ProjectCard({
           <div>
             <p className="text-sm text-muted-foreground">{code}</p>
             <h3 className="text-lg font-semibold mt-1">{name}</h3>
-            <p className="text-xs text-muted-foreground">Department: {department}</p>
+            <p className="text-xs text-muted-foreground">
+              Department: {department}
+            </p>
           </div>
-          <Badge
-            variant="default"
-
-          >
-            {PROJECT_STATUS[status]}
+          <Badge variant="default">
+            Gate {projectDetail?.projectDetail?.gateLevel ?? ""} -{" "}
+            {projectDetail?.gateSteps?.[currentGateLevel!]?.name ?? ""}
+            {/* {PROJECT_STATUS[status]} */}
           </Badge>
         </div>
 
@@ -77,16 +89,19 @@ export function ProjectCard({
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
           <span>
-            { formatDate(new Date(startDate ?? ''))} - {formatDate(new Date(endDate ?? ''))}
+            {formatDate(new Date(startDate ?? ""))} -{" "}
+            {formatDate(new Date(endDate ?? ""))}
           </span>
         </div>
 
-        {/* <div className="pt-2 border-t">
-          <p className="text-sm">
-            <span className="text-muted-foreground">Next Review: </span>
-            <span className="font-medium text-foreground">{nextReview}</span>
-          </p>
-        </div> */}
+        {currentGateLevel! > 1 ? (
+          <div className="pt-2 border-t">
+            <p className="text-sm">
+              <span className="text-muted-foreground">Next Review: </span>
+              <span className="font-medium text-foreground">{formatDate(new Date(nextReview ?? ""))}</span>
+            </p>
+          </div>
+        ) : null}
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
