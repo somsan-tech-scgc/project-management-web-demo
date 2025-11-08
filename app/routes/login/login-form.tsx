@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { $api } from "@/api/client";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -19,11 +20,12 @@ export function LoginForm({
           throw new Error("No access token in response");
         }
         localStorage.setItem("accessToken", data["data"]["accessToken"]);
+        toast.success("Login successful");
         navigate("/");
       },
       onError: (error) => {
         console.error("Login failed:", error);
-        alert('Login failed');
+        toast.error("Login failed");
         // Handle login error, e.g., show error message
       },
     }
@@ -64,12 +66,12 @@ export function LoginForm({
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
-            <a
+            {/* <a
               href="#"
               className="ml-auto text-sm underline-offset-4 hover:underline"
             >
               Forgot your password?
-            </a>
+            </a> */}
           </div>
           <Input id="password" name="password" type="password" required />
         </div>
@@ -92,9 +94,9 @@ export function LoginForm({
       </div>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
-        <a href="#" className="underline underline-offset-4">
+        <Link to="/register" className="underline underline-offset-4">
           Sign up
-        </a>
+        </Link>
       </div>
     </form>
   );

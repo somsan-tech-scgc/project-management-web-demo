@@ -277,7 +277,7 @@ export default function ProjectDetailPage() {
           </Card>
 
           {/* Reviewer Decisions */}
-          {/* <Card className="flex-1 w-full">
+          <Card className="flex-1 w-full">
                 <CardContent className="p-6">
                   <h2 className="text-xl font-semibold mb-4">
                     Reviewer Decisions
@@ -309,7 +309,7 @@ export default function ProjectDetailPage() {
                     ))}
                   </div>
                 </CardContent>
-              </Card> */}
+              </Card>
         </div>
       </div>
     </div>

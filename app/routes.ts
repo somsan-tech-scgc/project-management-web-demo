@@ -9,6 +9,7 @@ import {
 
 export default [
   route("login", "routes/login/login-page.tsx"),
+  route("register", "routes/register/register-page.tsx"),
   layout("routes/layout.tsx", [
     index("routes/dashboard/dashboard.tsx"),
     route("calendar", "routes/calendar/calendar-page.tsx"),
