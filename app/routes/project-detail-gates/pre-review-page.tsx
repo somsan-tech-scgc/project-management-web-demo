@@ -44,7 +44,7 @@ export default function PrePreviewPage() {
           <Link to={`/projects/${id}`} prefetch="viewport">
             <Button variant="secondary">Cancel</Button>
           </Link>
-          <Link to={`/projects/${id}/assign-committee`} prefetch="viewport">
+          <Link to={`/projects/${id}/schedule-meeting`} prefetch="viewport">
             <Button className="flex-1">Submit</Button>
           </Link>
         </div>
