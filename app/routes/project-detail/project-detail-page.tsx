@@ -44,7 +44,7 @@ import { useCommittees } from "@/hooks/use-committee";
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState("overview");
+  // const [activeTab, setActiveTab] = useState("overview");
 
   const projectQuery = useProjectDetail(id);
 
@@ -67,7 +67,7 @@ export default function ProjectDetailPage() {
     return (
       <Badge
         className={cn({
-          "bg-green-500 text-white border-0": statusValue === "Completed",
+          "bg-green-500 text-white border-0": statusValue === "Approved",
           "bg-amber-500 text-white border-0": statusValue === "Pending",
           "bg-gray-500 text-white border-0": statusValue === "In Progress",
         })}
@@ -93,6 +93,23 @@ export default function ProjectDetailPage() {
   const lastUpdated = project?.activities?.at(-1)?.createdDate
     ? formatDateTime(new Date(project.activities.at(-1)?.createdDate))
     : "-";
+
+  const mockCommittees = [
+    {
+      id: 1,
+      title: "Mr.",
+      firstName: "Sara",
+      lastName: "Chen",
+      role: "Engineer Manager",
+    },
+    {
+      id: 1,
+      title: "Mr.",
+      firstName: "David",
+      lastName: "Lee",
+      role: "Engineer Manager",
+    },
+  ];
   return (
     <div>
       {/* Project Header */}
@@ -288,28 +305,26 @@ export default function ProjectDetailPage() {
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Reviewer Decisions</h2>
               <div className="space-y-4">
-                {project?.commitee?.map((commitees, index) => (
+                {mockCommittees?.map((committee, index) => (
                   <div
-                    key={commitees.id}
+                    key={committee.id}
                     className="flex items-center justify-between"
-                  >
+                  > 
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                          {commitees.fullName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
+                          {committee.firstName}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{reviewer.name}</p>
+                        <p className="font-medium">{committee.title} {committee.firstName} {committee.lastName}</p>
                         <p className="text-sm text-muted-foreground">
-                          {reviewer.role}
+                          {committee.role}
                         </p>
                       </div>
                     </div>
-                    {getStatusBadge(reviewer.decision)}
+                    {index === 0 && getStatusBadge(3)}
+                    {index === 1 && getStatusBadge(1)}
                   </div>
                 ))}
               </div>

@@ -22,5 +22,8 @@ export function useCommittees() {
     },
     
   });
-  return committeesQuery;
+  return {
+    ...committeesQuery,
+    data: committeesQuery.data as unknown as CommitteesResponse["data"]['rows'],
+  };
 }
