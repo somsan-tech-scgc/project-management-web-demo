@@ -1,4 +1,4 @@
-import { Bell, User } from "lucide-react";
+import { Bell, Calendar, LayoutDashboard, User } from "lucide-react";
 import type { ComponentProps } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 export type LayoutRootProps = ComponentProps<"main">;
 
@@ -52,10 +52,16 @@ export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
                     to="/"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    Dashboard
+                    <Button variant="ghost">
+                      <LayoutDashboard width={16} height={16} />
+                      Dashboard
+                    </Button>
                   </Link>
                   <Link to="/calendar" className="text-sm font-medium">
-                    Calendar
+                    <Button variant="ghost">
+                      <Calendar width={16} height={16} />
+                      Calendar
+                    </Button>
                   </Link>
                 </nav>
               </div>
@@ -94,12 +100,12 @@ export function LogoutDialog() {
   return (
     <AlertDialogContent>
       <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
-          {/* <AlertDialogDescription>
+        <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+        {/* <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
             account and remove your data from our servers.
           </AlertDialogDescription> */}
-        </AlertDialogHeader>
+      </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>Cancel</AlertDialogCancel>
         <AlertDialogAction onClick={logout}>Continue</AlertDialogAction>
