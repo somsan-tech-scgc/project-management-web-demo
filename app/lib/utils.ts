@@ -38,3 +38,17 @@ export function getProjectProgressPercentage(gateSteps: { status: GateStatus }[]
   return Math.round((completedSteps / totalSteps) * 100)
 
 }
+
+export function formatCurrency(amount: number) {
+  return (
+    new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount) + " ฿"
+  );
+};
+
+
+export function shouldShowNextReview(currentGateLevel?: number) {
+  return Number.isSafeInteger(currentGateLevel) ? currentGateLevel! > 1 : false;
+}

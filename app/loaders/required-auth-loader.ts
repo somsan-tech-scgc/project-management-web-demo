@@ -1,13 +1,13 @@
-import { UnauthorizedError } from "@/api/client";
-import { toast } from "sonner";
+import { fetchClient, UnauthorizedError } from "@/api/client";
+import { ACCESS_TOKEN_KEY } from "@/constants/auth";
 
-export function requiredAuthLoader() {
-  const accessToken = localStorage.getItem("accessToken");
+export async function requiredAuthLoader() {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 
   if (!accessToken) {
-    toast.error("Please login to continue");
+    // toast.error("Please login to continue");
     throw new UnauthorizedError("No access token found");
-  }
+  } 
 
-  return null;
+  await fetchClient.GET('/committee-workflow/authentication/me')
 }

@@ -19,7 +19,7 @@ import {
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 export type LayoutRootProps = ComponentProps<"main">;
 
-export const clientLoader = requiredAuthLoader;
+// export const clientLoader = requiredAuthLoader;
 
 // HydrateFallback is rendered while the client loader is running
 export function HydrateFallback() {

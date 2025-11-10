@@ -36,9 +36,11 @@ import {
 } from "@/lib/utils";
 import { GATE_STATUS } from "@/constants/common";
 import { Timeline } from "./timeline";
-import { useProjectDetail, type ProjectDetailResponse } from "@/hooks/use-project-detail";
+import {
+  useProjectDetail,
+  type ProjectDetailResponse,
+} from "@/hooks/use-project-detail";
 import { useCommittees } from "@/hooks/use-committee";
-
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
@@ -46,10 +48,11 @@ export default function ProjectDetailPage() {
 
   const projectQuery = useProjectDetail(id);
 
-  const project = projectQuery.data! as unknown as ProjectDetailResponse['data'];
+  const project =
+    projectQuery.data! as unknown as ProjectDetailResponse["data"];
 
   const committeesQuery = useCommittees();
-  const committees = committeesQuery.data! ?? []
+  const committees = committeesQuery.data! ?? [];
 
   const getStatusIcon = (status: string) => {
     if (status === "Completed")
@@ -82,12 +85,14 @@ export default function ProjectDetailPage() {
   const progressPercentage =
     getProjectProgressPercentage(project?.gateSteps ?? []) ?? 0;
 
-  const gateSteps = project?.gateSteps ?? []
-  const currentGateLevel =  project?.projectDetail?.gateLevel
+  const gateSteps = project?.gateSteps ?? [];
+  const currentGateLevel = project?.projectDetail?.gateLevel;
 
-  const currentGate = gateSteps[currentGateLevel]
+  const currentGate = gateSteps[currentGateLevel];
 
-  const lastUpdated = project?.activities?.at(-1)?.createdDate ? formatDateTime(new Date(project.activities.at(-1)?.createdDate)) : '-'
+  const lastUpdated = project?.activities?.at(-1)?.createdDate
+    ? formatDateTime(new Date(project.activities.at(-1)?.createdDate))
+    : "-";
   return (
     <div>
       {/* Project Header */}
@@ -103,12 +108,12 @@ export default function ProjectDetailPage() {
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold mb-2">
-                {/* @ts-expect-error */}
                 {project?.projectDetail?.stageGateName}
               </h1>
               <p className="text-sm text-muted-foreground">
-                Managed by: {committees?.[0]?.title} {committees?.[0]?.firstName} {committees?.[0]?.lastName} · Last updated:{" "} <span className="font-medium">{lastUpdated}</span>
-            
+                Managed by: {committees?.[0]?.title}{" "}
+                {committees?.[0]?.firstName} {committees?.[0]?.lastName} · Last
+                updated: <span className="font-medium">{lastUpdated}</span>
               </p>
             </div>
             <div className="flex gap-3">
@@ -178,7 +183,9 @@ export default function ProjectDetailPage() {
             {/* Gate Details */}
             <Card>
               <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Gate {currentGate?.id}: {currentGate?.name}</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Gate {currentGate?.id}: {currentGate?.name}
+                </h2>
                 <div className="space-y-4">
                   {project?.steps?.map((step) => (
                     <div key={step.id} className="flex items-start gap-3">
@@ -278,38 +285,36 @@ export default function ProjectDetailPage() {
 
           {/* Reviewer Decisions */}
           <Card className="flex-1 w-full">
-                <CardContent className="p-6">
-                  <h2 className="text-xl font-semibold mb-4">
-                    Reviewer Decisions
-                  </h2>
-                  <div className="space-y-4">
-                    {project?.commitee?.map((commitees, index) => (
-                      <div
-                        key={commitees.id}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                              {commitees.fullName
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{reviewer.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {reviewer.role}
-                            </p>
-                          </div>
-                        </div>
-                        {getStatusBadge(reviewer.decision)}
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Reviewer Decisions</h2>
+              <div className="space-y-4">
+                {project?.commitee?.map((commitees, index) => (
+                  <div
+                    key={commitees.id}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                          {commitees.fullName
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">{reviewer.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {reviewer.role}
+                        </p>
                       </div>
-                    ))}
+                    </div>
+                    {getStatusBadge(reviewer.decision)}
                   </div>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

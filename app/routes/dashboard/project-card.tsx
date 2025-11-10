@@ -5,47 +5,39 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { $api, type Schema } from "@/api/client";
 import { PROJECT_STATUS } from "@/constants/common";
-import { formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, shouldShowNextReview } from "@/lib/utils";
 import {
   useProjectDetail,
   type ProjectDetailResponse,
 } from "@/hooks/use-project-detail";
+import { Link } from "react-router";
+import type { ProjectListRow } from "@/hooks/use-project-list";
 
-type ProjectCardProps = Schema["CreateProjectRequest"] & {
+type Additional = {
   progress: number;
   currentStep: number;
   totalSteps: number;
   nextReview: string;
   onClick: () => void; // Add onClick pro
   gateStatus: string;
+  href: string;
 };
+
+export type ProjectCardProps = ProjectListRow & Additional;
 
 export function ProjectCard({
   id,
   code,
   name,
   budget,
-  progress,
-  currentStep,
-  totalSteps,
   startDate,
   endDate,
   nextReview = new Date().toISOString(),
-  gateStatus,
-  onClick,
-  status,
   department,
   currentGateLevel = 1,
   totalGate = 1,
+  href
 }: ProjectCardProps) {
-  const formatCurrency = (amount: number) => {
-    return (
-      new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(amount) + " ฿"
-    );
-  };
 
   const progressPercentage =
     ((currentGateLevel ?? 0) / (totalGate ?? 0)) * 100 ?? 0;
@@ -94,21 +86,26 @@ export function ProjectCard({
           </span>
         </div>
 
-        {currentGateLevel! > 1 ? (
+        {shouldShowNextReview(currentGateLevel) ? (
           <div className="pt-2 border-t">
             <p className="text-sm">
               <span className="text-muted-foreground">Next Review: </span>
-              <span className="font-medium text-foreground">{formatDate(new Date(nextReview ?? ""))}</span>
+              <span className="font-medium text-foreground">
+                {formatDate(new Date(nextReview ?? ""))}
+              </span>
             </p>
           </div>
         ) : null}
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button variant="outline" className="w-full gap-2" onClick={onClick}>
+        <Link to={href} prefetch="viewport" className="w-full">
+        <Button variant="outline" className="w-full gap-2">
           <Eye className="h-4 w-4" />
           View
         </Button>
+        </Link>
+
       </CardFooter>
     </Card>
   );

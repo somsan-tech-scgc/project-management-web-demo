@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, Activity } from "react";
+import { useQueryStates, parseAsStringEnum, parseAsStringLiteral } from "nuqs";
 import { Search, Filter, Grid3x3, LayoutList } from "lucide-react";
 import {
   Select,
@@ -11,48 +12,34 @@ import { Header } from "./header";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "./project-card";
-import { Link } from "react-router";
-import { $api, type Schema } from "@/api/client";
+import { useProjectList, type ProjectListRow } from "@/hooks/use-project-list";
+import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import { ProjectListTable } from "./project-list-table";
 
+export function meta() {
+  return [{ title: "Dashboard" }];
+}
+
+const VIEW_MODE = ["grid", "list"] as const;
+
+export const clientLoader = requiredAuthLoader;
+
+export function HydrateFallback() {
+  return <div>Loading...</div>
+}
 
 const Index = () => {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const projectList = useProjectList();
 
-  const projectListQuery = $api.useQuery(
-    "post",
-    "/committee-workflow/project/list",
-    {
-      body: {
-        pageIndex: 1,
-        pageSize: 10,
-        searchFilter: "",
-        statusFilter: [],
-      },
-    },
-    {
-      select(data): {
-        total: number;
-        rows: Schema["CreateProjectRequest"][];
-      } {
-        return (
-          data?.data ?? {
-            total: 0,
-            rows: [],
-          }
-        );
-      },
-    }
-  );
+  const [queryStates, setQueryStates] = useQueryStates({
+    viewMode: parseAsStringLiteral(VIEW_MODE).withDefault(VIEW_MODE[0]),
+  }, { shallow: true });
 
 
   // $api.useQuery('get', '/committee-workflow/tag/list')
   // $api.useQuery('get', '/committee-workflow/category/list')
 
-  
-
-  const projects = projectListQuery.data?.rows ?? [];
-
-  console.log(projects);
+  const projects = projectList.data?.rows ?? [];
 
   return (
     <div className="min-h-screen">
@@ -94,44 +81,50 @@ const Index = () => {
 
           <div className="flex items-center gap-1 border rounded-lg p-1">
             <Button
-              variant={viewMode === "grid" ? "default" : "ghost"}
+              variant={queryStates.viewMode === "grid" ? "default" : "ghost"}
               size="icon"
-              onClick={() => setViewMode("grid")}
+              onClick={() => setQueryStates({ viewMode: "grid" })}
               className="h-8 w-8"
             >
               <Grid3x3 className="h-4 w-4" />
             </Button>
             <Button
-              variant={viewMode === "list" ? "default" : "ghost"}
+              variant={queryStates.viewMode === "list" ? "default" : "ghost"}
               size="icon"
-              onClick={() => setViewMode("list")}
+              onClick={() => setQueryStates({ viewMode: "list" })}
               className="h-8 w-8"
             >
               <LayoutList className="h-4 w-4" />
             </Button>
           </div>
         </div>
-
-        <div
-          className={
-            viewMode === "grid"
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-              : "space-y-4"
-          }
-        >
-          {projects?.map((project) => (
-            <Link
-              key={project.code}
-              to={`/projects/${project.id}`}
-              style={{ textDecoration: "none" }}
-            >
-              <ProjectCard {...project} />
-            </Link>
-          ))}
-        </div>
+        <Activity mode={queryStates.viewMode === "grid" ? "visible" : "hidden"}>
+          <ProjectGridView projects={projects} />
+        </Activity>
+        <Activity mode={queryStates.viewMode === "list" ? "visible" : "hidden"}>
+          <ProjectListTable projects={projects} />
+        </Activity>
       </main>
     </div>
   );
 };
+
+type ProjectGridViewProps = {
+  projects: ProjectListRow[];
+};
+
+function ProjectGridView({ projects }: ProjectGridViewProps) {
+  return (
+    <div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+      {projects?.map((project) => (
+        <ProjectCard
+          key={project.code}
+          {...project}
+          href={`/projects/${project.id}`}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default Index;

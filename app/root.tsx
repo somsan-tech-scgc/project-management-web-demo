@@ -9,12 +9,15 @@ import {
 } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
+import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import { UnauthorizedError } from "./api/client";
 import { useEffect } from "react";
+import { toast } from "sonner";
+import { ACCESS_TOKEN_KEY } from "./constants/auth";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,14 +51,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // throwOnError: true,
+      retry: 3,
+      'experimental_prefetchInRender': true
+    },
+  },
+});
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-      {import.meta.env.DEV ? <ReactQueryDevtools /> : null}
-    </QueryClientProvider>
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+        {import.meta.env.DEV ? <ReactQueryDevtools /> : null}
+      </QueryClientProvider>
+    </NuqsAdapter>
   );
 }
 
@@ -72,18 +85,32 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
+    console.log('a')
+  } else if (error instanceof UnauthorizedError) {
+    localStorage.removeItem(ACCESS_TOKEN_KEY)
+    // return navigate("/login", { replace: true });
   } else if (import.meta.env.DEV && error && error instanceof Error) {
+    message = 'Wildcard error'
     details = error.message;
     stack = error.stack;
+    console.log('b')
+  } else {
+    message = 'Unknown error'
   }
+
+  console.log('e b', error)
 
   useEffect(() => {
     if (error instanceof UnauthorizedError) {
+
+      // console.log('cc')
       // Redirect to login page on UnauthorizedError
       navigate("/login", { replace: true });
+      toast.error("Please login to continue");
+
     }
     // console.error(error);
-  }, [error, navigate]);
+  }, [error, navigate, toast]);
 
   return (
     <main className="pt-16 p-4 container mx-auto">
