@@ -1,20 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { CalendarHeader } from '@/features/calendar/components/calendar-header';
-import { MonthView } from '@/features/calendar/components/month-view';
-import { WeekView } from '@/features/calendar/components/week-view';
-import { DayView } from '@/features/calendar/components/day-view';
-import { MeetingDetailModal } from '@/features/calendar/components/meeting-detail-modal';
-import { NewMeetingModal } from '@/features/calendar/components/new-meeting-modal';
-import { useCalendar } from '@/features/calendar/hooks/use-calendar';
-import { meetingService } from '@/features/calendar/services/meeting-service';
-import type { Meeting } from '@/features/calendar/types';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { CalendarHeader } from "@/features/calendar/components/calendar-header";
+import { MonthView } from "@/features/calendar/components/month-view";
+import { WeekView } from "@/features/calendar/components/week-view";
+import { DayView } from "@/features/calendar/components/day-view";
+import { MeetingDetailModal } from "@/features/calendar/components/meeting-detail-modal";
+import { NewMeetingModal } from "@/features/calendar/components/new-meeting-modal";
+import { useCalendar } from "@/features/calendar/hooks/use-calendar";
+import { meetingService } from "@/features/calendar/services/meeting-service";
+import type { Meeting } from "@/features/calendar/types";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function CalendarPage() {
   const [isNewMeetingOpen, setIsNewMeetingOpen] = useState(false);
-  const [selectedMeetingForDetail, setSelectedMeetingForDetail] = useState<Meeting | null>(null);
+  const [selectedMeetingForDetail, setSelectedMeetingForDetail] =
+    useState<Meeting | null>(null);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,7 +43,7 @@ export default function CalendarPage() {
       const data = await meetingService.getAllMeetings();
       setMeetings(data);
     } catch (error) {
-      console.error('Failed to load meetings:', error);
+      console.error("Failed to load meetings:", error);
     } finally {
       setIsLoading(false);
     }
@@ -57,13 +59,24 @@ export default function CalendarPage() {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
+      <Tabs>
+        <TabsList>
+          <TabsTrigger value="project-timeline">Project Timeline</TabsTrigger>
+          <TabsTrigger value="review-calendar">Review Calendar</TabsTrigger>
+        </TabsList>
+      </Tabs>
+
       {/* Page header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Review Calendar</h1>
         <p className="text-gray-600 mb-4">
           Manage all project reviews in one place.
         </p>
-        <Button onClick={handleNewReview} className="bg-blue-500 hover:bg-blue-600">
+
+        <Button
+          onClick={handleNewReview}
+          className="bg-blue-500 hover:bg-blue-600"
+        >
           New Review
         </Button>
       </div>
@@ -78,7 +91,7 @@ export default function CalendarPage() {
       />
 
       {/* Calendar view */}
-      {viewMode === 'month' && (
+      {viewMode === "month" && (
         <MonthView
           currentDate={currentDate}
           days={days}
@@ -87,7 +100,7 @@ export default function CalendarPage() {
         />
       )}
 
-      {viewMode === 'week' && (
+      {viewMode === "week" && (
         <WeekView
           currentDate={currentDate}
           getMeetingsForDate={getMeetingsForDate}
@@ -95,7 +108,7 @@ export default function CalendarPage() {
         />
       )}
 
-      {viewMode === 'day' && (
+      {viewMode === "day" && (
         <DayView
           currentDate={currentDate}
           getMeetingsForDate={getMeetingsForDate}
