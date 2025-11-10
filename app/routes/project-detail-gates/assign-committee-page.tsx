@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { CommitteeTable } from "./committee-table";
 import { ProjectDetailsSidebar } from "./project-details-sidebar";
+import { Link } from "react-router";
 // import DateRangePicker from "@/components/DateRangePicker";
 import { Button } from "@/components/ui/button";
+import { useParams } from "react-router";
+import { useProjectDetail } from "@/hooks/use-project-detail";
+import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+
+export const clientLoader = requiredAuthLoader;
+
+export const HydrateFallback = () => {
+  return <div>Loading...</div>;
+};
 
 export interface CommitteeMember {
   id: string;
@@ -13,6 +23,15 @@ export interface CommitteeMember {
 }
 
 export default function AssignCommitteePage() {
+  const { id } = useParams();
+  const projectQuery = useProjectDetail(id);
+  const project = projectQuery.data;
+
+  if (projectQuery.isLoading || !project) return <HydrateFallback />;
+
+  if (projectQuery.isError)
+    return <div>Error: {(projectQuery.error as Error).message}</div>;
+
   const [selectedMembers, setSelectedMembers] = useState<string[]>([
     "2",
     "4",
@@ -103,9 +122,11 @@ export default function AssignCommitteePage() {
               onDateRangeChange={setDateRange}
             /> */}
 
-            <div className="flex justify-end">
-              <Button size="lg">Propose Review Slots</Button>
-            </div>
+            {/* <div className="flex justify-end">
+              <Link to={`/projects/${id}/schedule-meeting`} prefetch="viewport">
+                <Button size="lg">Propose Review Slots</Button>
+              </Link>
+            </div> */}
           </div>
 
           <div>
@@ -114,6 +135,14 @@ export default function AssignCommitteePage() {
               dateRange={dateRange}
             />
           </div>
+        </div>
+        <div className="flex gap-3 mt-6 justify-end">
+          <Link to={`/projects/${id}/pre-review`} prefetch="viewport">
+            <Button variant="secondary">Cancel</Button>
+          </Link>
+          <Link to={`/projects/${id}/schedule-meeting`} prefetch="viewport">
+            <Button className="flex-1">Submit</Button>
+          </Link>
         </div>
       </main>
     </div>

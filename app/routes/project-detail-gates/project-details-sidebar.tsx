@@ -75,10 +75,10 @@ export const ProjectDetailsSidebar = ({
         </div>
 
         <div className="mt-6 flex gap-3">
-          <Button variant="outline" className="flex-1">
+          {/* <Button variant="outline" className="flex-1">
             Cancel
           </Button>
-          <Button className="flex-1">Confirm Assignment</Button>
+          <Button className="flex-1">Confirm Assignment</Button> */}
         </div>
       </div>
     </div>

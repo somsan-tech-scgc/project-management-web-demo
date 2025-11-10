@@ -6,7 +6,7 @@ import { useProjectDetail } from "@/hooks/use-project-detail";
 import { Button } from "@/components/ui/button";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 
-export const clientLoader = requiredAuthLoader
+export const clientLoader = requiredAuthLoader;
 
 export function HydrateFallback() {
   return <div>Loading...</div>;
@@ -20,7 +20,8 @@ export default function PrePreviewPage() {
 
   if (projectQuery.isLoading || !project) return <HydrateFallback />;
 
-  if (projectQuery.isError) return <div>Error: {(projectQuery.error as Error).message}</div>;
+  if (projectQuery.isError)
+    return <div>Error: {(projectQuery.error as Error).message}</div>;
 
   return (
     <div className="container mx-auto px-6 py-8">
@@ -40,11 +41,11 @@ export default function PrePreviewPage() {
         <GateDecision />
 
         <div className="flex gap-3 mt-6 justify-end">
-          <Link to={`/projects/${id}/assign-committee`} prefetch="viewport">
-            <Button className="flex-1">Submit</Button>
-          </Link>
           <Link to={`/projects/${id}`} prefetch="viewport">
             <Button variant="secondary">Cancel</Button>
+          </Link>
+          <Link to={`/projects/${id}/assign-committee`} prefetch="viewport">
+            <Button className="flex-1">Submit</Button>
           </Link>
         </div>
       </div>
