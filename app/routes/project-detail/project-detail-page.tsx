@@ -1,20 +1,16 @@
-import { useState } from "react";
 
 import {
   ArrowLeft,
-  Bell,
   Calendar,
   CheckCircle2,
   Circle,
   Clock,
   Upload,
-  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -26,11 +22,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router";
-import { $api, type Schema } from "@/api/client";
-import { useQuery } from "@tanstack/react-query";
 import {
   cn,
-  formatDate,
   formatDateTime,
   getProjectProgressPercentage,
 } from "@/lib/utils";
@@ -135,15 +128,9 @@ export default function ProjectDetailPage() {
             </div>
             <div className="flex gap-3">
               <Link to={`/projects/${id}/pre-review`}>
-                <Button variant="outline" className="gap-2">
-                  <Upload className="h-4 w-4" />
-                  Upload documents
-                </Button>
-              </Link>
-              <Link to={`/projects/${id}/schedule-meeting`}>
                 <Button className="gap-2">
                   <Calendar className="h-4 w-4" />
-                  Schedule review
+                  Review Gate
                 </Button>
               </Link>
             </div>

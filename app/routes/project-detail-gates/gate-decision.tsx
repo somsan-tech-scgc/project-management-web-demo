@@ -3,6 +3,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 type DecisionType = "approve" | "reject" | "conditional";
 
@@ -101,15 +102,7 @@ export const GateDecision = () => {
         </div>
       )}
 
-      <div className="flex gap-3 mt-6">
-        <Button className="flex-1">Approve Gate</Button>
-        <Button variant="destructive" className="flex-1">
-          Reject Gate
-        </Button>
-        <Button variant="secondary" className="flex-1">
-          Conditional Approval
-        </Button>
-      </div>
+     
     </div>
   );
 };

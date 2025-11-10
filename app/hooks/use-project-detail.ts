@@ -52,5 +52,8 @@ export function useProjectDetail(projectId?: number | string) {
     }
   );
 
-  return projectDetailQuery;
+  return {
+    ...projectDetailQuery,
+    data: projectDetailQuery.data as unknown as ProjectDetailResponse["data"],
+  };
 }
