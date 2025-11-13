@@ -21,7 +21,7 @@ export function Timeline({ roadmapItems, columns = [] }: TimelineProps) {
       ? GATE_STATUS[status as keyof typeof GATE_STATUS] 
       : GATE_STATUS[status];
       
-    if (statusValue === "Completed" || status === 3) {
+    if (statusValue === "Approved" || status === 3) {
       return <CheckCircle2 className="h-5 w-5 text-primary" />;
     }
     if (statusValue === "In Progress" || status === 2) {

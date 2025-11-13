@@ -1,4 +1,3 @@
-
 import {
   ArrowLeft,
   Calendar,
@@ -22,11 +21,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Link, useParams } from "react-router";
-import {
-  cn,
-  formatDateTime,
-  getProjectProgressPercentage,
-} from "@/lib/utils";
+import { cn, formatDateTime, getProjectProgressPercentage } from "@/lib/utils";
 import { GATE_STATUS } from "@/constants/common";
 import { Timeline } from "./timeline";
 import {
@@ -227,7 +222,9 @@ export default function ProjectDetailPage() {
                           {doc.name}
                         </TableCell>
 
-                        <TableCell>{getStatusBadge(doc.status)}</TableCell>
+                        <TableCell>
+                          {getStatusBadge(doc.status as 1 | 2 | 3)}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -296,7 +293,7 @@ export default function ProjectDetailPage() {
                   <div
                     key={committee.id}
                     className="flex items-center justify-between"
-                  > 
+                  >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-primary text-primary-foreground text-xs">
@@ -304,7 +301,10 @@ export default function ProjectDetailPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{committee.title} {committee.firstName} {committee.lastName}</p>
+                        <p className="font-medium">
+                          {committee.title} {committee.firstName}{" "}
+                          {committee.lastName}
+                        </p>
                         <p className="text-sm text-muted-foreground">
                           {committee.role}
                         </p>
