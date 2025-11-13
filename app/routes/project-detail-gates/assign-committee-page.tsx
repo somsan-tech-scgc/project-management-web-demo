@@ -140,7 +140,7 @@ export default function AssignCommitteePage() {
           <Link to={`/projects/${id}/pre-review`} prefetch="viewport">
             <Button variant="secondary">Cancel</Button>
           </Link>
-          <Link to={`/`} prefetch="viewport">
+          <Link to={`/notifications`} prefetch="viewport">
             <Button className="flex-1">Submit</Button>
           </Link>
         </div>
