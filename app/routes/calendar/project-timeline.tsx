@@ -1,4 +1,11 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type ProjectData = {
   projectName: string;
@@ -140,79 +147,70 @@ export const ProjectTimeline = () => {
     <>
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Project Timeline</h1>
-        <p className="text-gray-600 mb-4">
-          View the timeline of all projects.
-        </p>
+        <p className="text-gray-600 mb-4">View the timeline of all projects.</p>
       </div>
-      <ScrollArea className="w-full">
-        <div className="min-w-[1400px]">
-          <table className="w-full border-collapse bg-white">
-            <thead>
-              <tr className="bg-table-header">
-                <th className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
-                  Project Name
-                </th>
-                <th className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
-                  Com Phase
-                </th>
-                <th className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
-                  BUName
-                </th>
-                <th className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
-                  PM Name
-                </th>
-                {timelineHeaders.map((header, index) => (
-                  <th
-                    key={index}
-                    className="border border-table-border px-3 py-3 text-center text-xs font-semibold text-table-header-foreground whitespace-pre-line"
-                  >
-                    {header}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="bg-muted/30">
-                {timelineHeaders.map((_, index) => (
-                  <td
-                    key={index}
-                    className="border border-table-border bg-muted/30"
-                  ></td>
-                ))}
-              </tr>
-              {projects.map((project, projectIndex) => (
-                <tr
-                  key={projectIndex}
-                  className="hover:bg-muted/50 transition-colors"
+      <Table className="border-collapse min-w-[1000px] bg-white">
+        <TableHeader>
+          <TableRow className="bg-table-header">
+            <TableHead className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
+              Project Name
+            </TableHead>
+            <TableHead className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
+              Com Phase
+            </TableHead>
+            <TableHead className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
+              BUName
+            </TableHead>
+            <TableHead className="border border-table-border px-4 py-3 text-left text-sm font-semibold text-table-header-foreground whitespace-nowrap">
+              PM Name
+            </TableHead>
+            {timelineHeaders.map((header, index) => (
+              <TableHead
+                key={index}
+                className="border border-table-border px-3 py-3 text-center text-xs font-semibold text-table-header-foreground whitespace-pre-line"
+              >
+                {header}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow className="bg-muted/30">
+            {timelineHeaders.map((_, index) => (
+              <TableCell
+                key={index}
+                className="border border-table-border bg-muted/30"
+              ></TableCell>
+            ))}
+          </TableRow>
+          {projects.map((project, projectIndex) => (
+            <TableRow key={projectIndex} className="transition-colors">
+              <TableCell className="border border-table-border px-4 py-3 text-sm">
+                {project.projectName}
+              </TableCell>
+              <TableCell className="border border-table-border px-4 py-3 text-sm whitespace-nowrap">
+                {project.comPhase}
+              </TableCell>
+              <TableCell className="border border-table-border px-4 py-3 text-sm">
+                {project.buName}
+              </TableCell>
+              <TableCell className="border border-table-border px-4 py-3 text-sm">
+                {project.pmName}
+              </TableCell>
+              {timelineHeaders.map((header, cellIndex) => (
+                <TableCell
+                  key={cellIndex}
+                  className={`border border-table-border px-3 py-3 text-center text-sm font-medium ${
+                    project.timeline[header] ? "bg-table-highlight" : ""
+                  }`}
                 >
-                  <td className="border border-table-border px-4 py-3 text-sm">
-                    {project.projectName}
-                  </td>
-                  <td className="border border-table-border px-4 py-3 text-sm whitespace-nowrap">
-                    {project.comPhase}
-                  </td>
-                  <td className="border border-table-border px-4 py-3 text-sm">
-                    {project.buName}
-                  </td>
-                  <td className="border border-table-border px-4 py-3 text-sm">
-                    {project.pmName}
-                  </td>
-                  {timelineHeaders.map((header, cellIndex) => (
-                    <td
-                      key={cellIndex}
-                      className={`border border-table-border px-3 py-3 text-center text-sm font-medium ${
-                        project.timeline[header] ? "bg-table-highlight" : ""
-                      }`}
-                    >
-                      {project.timeline[header] || ""}
-                    </td>
-                  ))}
-                </tr>
+                  {project.timeline[header] || ""}
+                </TableCell>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </ScrollArea>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </>
   );
 };
