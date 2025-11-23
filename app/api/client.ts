@@ -2,6 +2,7 @@ import createFetchClient from "openapi-fetch";
 import createClient from "openapi-react-query";
 import type { paths, components } from "./types";
 import { ACCESS_TOKEN_KEY } from "@/constants/auth";
+import { toast } from "sonner";
 
 export const fetchClient = createFetchClient<paths>({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -26,16 +27,16 @@ fetchClient.use({
   async onResponse({ response }) {
     const res = await response.json();
 
-    console.log(res.code, res.code === "S01");
+    // console.log(res.code, res.code === "S01");
     if (res.code === "S01") {
-      console.log("Unauthorized");
+      // console.log("Unauthorized");
       throw new UnauthorizedError("Unauthorized", { cause: res });
     }
 
     return new Response(JSON.stringify(res));
   },
   onError({ error }) {
-    console.log('onError', error);
+    // console.log('onError', error);
     
   },
 });

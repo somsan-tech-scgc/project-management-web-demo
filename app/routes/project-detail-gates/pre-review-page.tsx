@@ -5,6 +5,7 @@ import { GateDecision } from "./gate-decision";
 import { useProjectDetail } from "@/hooks/use-project-detail";
 import { Button } from "@/components/ui/button";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import { buildToastLocationState } from "@/lib/utils";
 
 export const clientLoader = requiredAuthLoader;
 
@@ -16,7 +17,7 @@ export default function PrePreviewPage() {
   const { id } = useParams();
   const projectQuery = useProjectDetail(id);
   const project = projectQuery.data;
-  let gateNo = project.projectDetail.gateLevel;
+  let gateNo = project?.projectDetail.gateLevel;
 
   if (projectQuery.isLoading || !project) return <HydrateFallback />;
 
@@ -44,7 +45,11 @@ export default function PrePreviewPage() {
           <Link to={`/projects/${id}`} prefetch="viewport">
             <Button variant="secondary">Cancel</Button>
           </Link>
-          <Link to={`/projects/${id}/schedule-meeting`} prefetch="viewport">
+          <Link
+            to={`/projects/${id}`}
+            state={buildToastLocationState("Gate submitted successfully", "success")}
+            prefetch="viewport"
+          >
             <Button className="flex-1">Submit</Button>
           </Link>
         </div>
