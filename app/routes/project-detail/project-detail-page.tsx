@@ -29,6 +29,9 @@ import {
   type ProjectDetailResponse,
 } from "@/hooks/use-project-detail";
 import { useCommittees } from "@/hooks/use-committee";
+import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+
+export const clientLoader = requiredAuthLoader;
 
 export default function ProjectDetailPage() {
   const { id } = useParams();
