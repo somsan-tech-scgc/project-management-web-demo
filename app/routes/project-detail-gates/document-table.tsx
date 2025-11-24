@@ -1,19 +1,35 @@
-import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
+import { useState } from "react";
 
 interface Document {
   name: string;
   version: string;
-  status: "Approved" | "Pending";
+  status: "Approved" | "Pending" | "Rejected";
 }
 
-const documents: Document[] = [
+const initialDocuments: Document[] = [
   { name: "Project Proposal", version: "1.2", status: "Approved" },
   { name: "Technical Specifications", version: "2.0", status: "Pending" },
   { name: "Risk Assessment Report", version: "1.0", status: "Approved" },
 ];
 
 export const DocumentTable = () => {
+  const [documents, setDocuments] = useState<Document[]>(initialDocuments);
+
+  const handleStatusChange = (index: number, newStatus: Document["status"]) => {
+    const newDocuments = [...documents];
+    newDocuments[index].status = newStatus;
+    setDocuments(newDocuments);
+  };
+
   return (
     <div className="bg-card rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold mb-4 text-foreground">
@@ -47,16 +63,28 @@ export const DocumentTable = () => {
                   {doc.version}
                 </td>
                 <td className="py-4 px-4">
-                  <Badge
-                    variant={doc.status === "Approved" ? "success" : "warning"}
+                  <Select
+                    value={doc.status}
+                    onValueChange={(value) =>
+                      handleStatusChange(index, value as Document["status"])
+                    }
                   >
-                    {doc.status}
-                  </Badge>
+                    <SelectTrigger className="w-[130px]">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Pending">Pending</SelectItem>
+                      <SelectItem value="Approved">Approved</SelectItem>
+                      <SelectItem value="Rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </td>
                 <td className="py-4 px-4">
-                  <Button variant="link" className="h-auto p-0 text-primary">
-                    View
-                  </Button>
+                  <Link to={`https://ratchakitcha.soc.go.th/documents/95562.pdf`} target="_blank">
+                    <Button variant="link" className="h-auto p-0 text-primary">
+                      View
+                    </Button>
+                  </Link>
                 </td>
               </tr>
             ))}
