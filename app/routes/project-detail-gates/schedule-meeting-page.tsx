@@ -21,7 +21,6 @@ export default function ScheduleMeetingPage() {
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
 
-  const { id } = useParams();
 
   const navigate = useNavigate();
 
@@ -34,7 +33,7 @@ export default function ScheduleMeetingPage() {
       endTime,
       location,
     });
-    navigate(`/projects/${id}/assign-committee`);
+    navigate(`/notifications`);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Bell, Calendar, LayoutDashboard, User } from "lucide-react";
+import { Bell, Calendar, Calendar1, CalendarCheck2, CalendarCheck2Icon, LayoutDashboard, User } from "lucide-react";
 import type { ComponentProps } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,6 @@ export function HydrateFallback() {
 }
 
 export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
-  const { logout } = useLogout();
   return (
     <>
       <main {...rest} className="min-h-screen bg-slate-50">
@@ -50,6 +49,7 @@ export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
                 <nav className="flex items-center gap-6">
                   <Link
                     to="/"
+                    prefetch="viewport"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <Button variant="ghost">
@@ -57,10 +57,16 @@ export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
                       Dashboard
                     </Button>
                   </Link>
-                  <Link to="/calendar" className="text-sm font-medium">
+                  <Link to="/calendar" prefetch="viewport" className="text-sm font-medium">
                     <Button variant="ghost">
                       <Calendar width={16} height={16} />
                       Calendar
+                    </Button>
+                  </Link>
+                  <Link to="/schedule-meeting">
+                    <Button variant="ghost">
+                      <CalendarCheck2Icon width={16} height={16} />
+                      Schedule Meeting
                     </Button>
                   </Link>
                 </nav>

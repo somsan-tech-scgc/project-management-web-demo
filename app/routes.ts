@@ -22,12 +22,13 @@ export default [
           "assign-committee",
           "routes/project-detail-gates/assign-committee-page.tsx"
         ),
-        route(
-          "schedule-meeting",
-          "routes/project-detail-gates/schedule-meeting-page.tsx"
-        ),
+        
       ]),
     ]),
+    route(
+      "schedule-meeting",
+      "routes/project-detail-gates/schedule-meeting-page.tsx"
+    ),
     ...prefix("/meetings", [
       route("new", "routes/meetings/new/new-meeting-page.tsx"),
       route(":id", "routes/meetings/$id/meeting-detail-page.tsx"),

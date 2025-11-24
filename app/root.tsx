@@ -3,6 +3,7 @@ import {
   Links,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
   useLocation,
@@ -114,6 +115,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
+  } else if (error instanceof UnauthorizedError) {
+    message = "Unauthorized";
+    details = "You are not authorized to access this page.";
+    console.log(error)
+    // throw redirect('/login');
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     message = "Wildcard error";
     details = error.message;
