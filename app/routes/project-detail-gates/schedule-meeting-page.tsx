@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronRight, Bell, Settings } from "lucide-react";
+import { ChevronRight, Bell, Settings, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,8 +10,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { AttendeeCard } from "./attendee-card";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
+import { buildToastLocationState } from "@/lib/utils";
+import type { Route } from "../../+types/root";
+import { useCommittees } from "@/hooks/use-committee";
+import { Spinner } from "@/components/ui/spinner";
+import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import { useProjectList } from "@/hooks/use-project-list";
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Schedule Meeting" },
+  ];
+};
+
+export const clientLoader = requiredAuthLoader;
+
+export const HydrateFallback = () => {
+  return <Spinner />;
+};
 
 export default function ScheduleMeetingPage() {
   const [meetingTitle, setMeetingTitle] = useState("");
@@ -20,9 +46,32 @@ export default function ScheduleMeetingPage() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
-
-
+  const [selectedCommittees, setSelectedCommittees] = useState<any[]>([]);
+  const [addedCommittees, setAddedCommittees] = useState<any[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  const { data: committees, isLoading: isLoadingCommittees } = useCommittees();
+  const { data: projectsQuery, isLoading: isLoadingProjects } = useProjectList();
+  const projects = projectsQuery?.rows ?? [];
   const navigate = useNavigate();
+
+  const toggleCommitteeSelection = (committee: any) => {
+    setSelectedCommittees((prev) => {
+      const isSelected = prev.some((c) => c.id === committee.id);
+      if (isSelected) {
+        return prev.filter((c) => c.id !== committee.id);
+      }
+      return [...prev, committee];
+    });
+  };
+
+  const handleConfirmSelection = () => {
+    if (selectedCommittees.length > 0) {
+      setAddedCommittees([...addedCommittees, ...selectedCommittees]);
+      setSelectedCommittees([]);
+      setIsDialogOpen(false);
+    }
+  };
 
   const handleScheduleMeeting = () => {
     console.log("Scheduling meeting:", {
@@ -33,7 +82,9 @@ export default function ScheduleMeetingPage() {
       endTime,
       location,
     });
-    navigate(`/notifications`);
+    navigate(`/notifications`, {
+      state: buildToastLocationState("Meeting scheduled successfully", "success")
+    });
   };
 
   return (
@@ -68,14 +119,14 @@ export default function ScheduleMeetingPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="project">Project</Label>
-            <Select value={project} onValueChange={setProject}>
+            <Select value={project} onValueChange={setProject} required>
               <SelectTrigger id="project" className="bg-card">
-                <SelectValue placeholder="Project Alpha" />
+                <SelectValue placeholder="Select project" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="alpha">Project Alpha</SelectItem>
-                <SelectItem value="beta">Project Beta</SelectItem>
-                <SelectItem value="gamma">Project Gamma</SelectItem>
+                {projects?.map((project) => (
+                  <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -129,24 +180,65 @@ export default function ScheduleMeetingPage() {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             className="bg-card"
+            type="url"
           />
         </div>
 
         {/* Attendees */}
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-foreground">Attendees</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-foreground">Committees</h3>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Committee
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Select Committee Member</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-2 max-h-[60vh] overflow-y-auto pt-4">
+                  {isLoadingCommittees ? (
+                    <Spinner />
+                  ) : committees?.length === 0 ? (
+                    <div className="text-center py-4 text-muted-foreground">
+                      No committees found
+                    </div>
+                  ) : (
+                    committees?.map((committee) => (
+                      <AttendeeCard
+                        key={committee.id}
+                        name={`${committee.firstName} ${committee.lastName}`}
+                        role={committee.role || committee.title}
+                        type="committee"
+                        selected={selectedCommittees.some(c => c.id === committee.id)}
+                        onClick={() => toggleCommitteeSelection(committee)}
+                      />
+                    ))
+                  )}
+                </div>
+                <DialogFooter>
+                  <Button 
+                    onClick={handleConfirmSelection} 
+                    disabled={selectedCommittees.length === 0}
+                  >
+                    Confirm Selection
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
           <div className="space-y-3">
-            <AttendeeCard
-              name="Review Committee A"
-              role="Committee"
-              type="committee"
-            />
-            <AttendeeCard
-              name="Ethan Carter"
-              role="Project Manager"
-              type="manager"
-            />
-            <AttendeeCard name="Vendor X" role="Vendor" type="vendor" />
+            {addedCommittees.map((committee, index) => (
+               <AttendeeCard
+                key={`added-${index}`}
+                name={`${committee.firstName} ${committee.lastName}`}
+                role={committee.role || committee.title}
+                type="committee"
+              />
+            ))}
           </div>
         </div>
 

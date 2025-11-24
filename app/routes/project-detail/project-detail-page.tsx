@@ -30,6 +30,15 @@ import {
 } from "@/hooks/use-project-detail";
 import { useCommittees } from "@/hooks/use-committee";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import type { Route } from "../../+types/root";
+import { Spinner } from "@/components/ui/spinner";
+
+
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: "Project Detail" },
+  ];
+};
 
 export const clientLoader = requiredAuthLoader;
 
@@ -68,7 +77,7 @@ export default function ProjectDetailPage() {
     );
   };
 
-  if (projectQuery.isLoading) return <div>Loading...</div>;
+  if (projectQuery.isLoading) return <Spinner />;
 
   if (projectQuery.isError)
     return <div>Error: {(projectQuery.error as Error).message}</div>;
