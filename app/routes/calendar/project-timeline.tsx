@@ -23,11 +23,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  useProjectList,
-  type ProjectListRow,
-} from "@/hooks/use-project-list";
+import { Badge } from "@/components/ui/badge";
+import { useProjectList, type ProjectListRow } from "@/hooks/use-project-list";
 
 type ProjectData = {
   projectName: string;
@@ -129,12 +126,14 @@ const columns: ColumnDef<ProjectData>[] = [
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         className="h-auto p-0 font-semibold hover:bg-transparent"
       >
-        Com Phase
+        Status
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="whitespace-nowrap">{row.getValue("comPhase")}</div>
+      <div className="whitespace-nowrap">
+        {<Badge>{row.getValue("comPhase")}</Badge>}
+      </div>
     ),
   },
   {
@@ -186,7 +185,7 @@ export const ProjectTimeline = () => {
 
   // Get stable reference to rows
   const rows = projectListData?.rows;
-  
+
   // Create a stable key from row IDs to detect actual data changes
   const rowsKey = React.useMemo(
     () => rows?.map((r: ProjectListRow) => r.id).join(",") ?? "",
@@ -247,7 +246,7 @@ export const ProjectTimeline = () => {
         />
       </div> */}
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md bg-white">
         <Table className="min-w-[1000px]">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
