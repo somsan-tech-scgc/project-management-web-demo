@@ -66,11 +66,8 @@ export default function ScheduleMeetingPage() {
   };
 
   const handleConfirmSelection = () => {
-    if (selectedCommittees.length > 0) {
-      setAddedCommittees([...addedCommittees, ...selectedCommittees]);
-      setSelectedCommittees([]);
-      setIsDialogOpen(false);
-    }
+    setAddedCommittees(selectedCommittees);
+    setIsDialogOpen(false);
   };
 
   const handleScheduleMeeting = () => {
@@ -97,7 +94,7 @@ export default function ScheduleMeetingPage() {
           Schedule Review Meeting
         </h2>
         <p className="text-muted-foreground">
-          Define the meeting details for the Gate 1 review of Project Alpha.
+          Define the meeting details for Project.
         </p>
       </div>
 
@@ -124,8 +121,8 @@ export default function ScheduleMeetingPage() {
                 <SelectValue placeholder="Select project" />
               </SelectTrigger>
               <SelectContent>
-                {projects?.map((project) => (
-                  <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                {projects?.map((project: any) => (
+                  <SelectItem key={project.id} value={String(project.id)}>{project.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -188,11 +185,19 @@ export default function ScheduleMeetingPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold text-foreground">Committees</h3>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog 
+              open={isDialogOpen} 
+              onOpenChange={(open) => {
+                setIsDialogOpen(open);
+                if (open) {
+                  setSelectedCommittees([...addedCommittees]);
+                }
+              }}
+            >
               <DialogTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Committee
+                  Manage Committees
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-2xl">
@@ -221,8 +226,7 @@ export default function ScheduleMeetingPage() {
                 </div>
                 <DialogFooter>
                   <Button 
-                    onClick={handleConfirmSelection} 
-                    disabled={selectedCommittees.length === 0}
+                    onClick={handleConfirmSelection}
                   >
                     Confirm Selection
                   </Button>
