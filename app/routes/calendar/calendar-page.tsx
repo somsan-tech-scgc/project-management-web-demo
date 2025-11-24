@@ -6,13 +6,14 @@ import { parseAsStringLiteral, useQueryStates } from "nuqs";
 import { ReviewCalendar } from "./review-calendar";
 import { ProjectTimeline } from "./project-timeline";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
-import { Spinner } from "@/components/ui/spinner";
 import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
+import { GanttChart } from "./grant-chart";
 
-const TAB_MODES = ["project-timeline", "review-calendar"] as const;
+const TAB_MODES = ["project-timeline", "review-calendar", "gantt-chart"] as const;
 const TAB_MODE_LABELS = {
   [TAB_MODES[0]]: "Project Timeline",
   [TAB_MODES[1]]: "Review Calendar",
+  [TAB_MODES[2]]: "Gantt Chart",
 } as const;
 
 const DEFAULT_VIEW_MODE = TAB_MODES[0];
@@ -20,6 +21,7 @@ const DEFAULT_VIEW_MODE = TAB_MODES[0];
 export const clientLoader = requiredAuthLoader;
 
 export const HydrateFallback = DefaultHydrateFallback;
+
 export default function CalendarPage() {
   const [queryStates, setQueryStates] = useQueryStates(
     {
@@ -51,6 +53,9 @@ export default function CalendarPage() {
       </Activity>
       <Activity mode={queryStates.mode === TAB_MODES[1] ? "visible" : "hidden"}>
         <ReviewCalendar />
+      </Activity>
+      <Activity mode={queryStates.mode === TAB_MODES[2] ? "visible" : "hidden"}>
+        <GanttChart />
       </Activity>
     </div>
   );
