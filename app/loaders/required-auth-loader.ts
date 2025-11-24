@@ -1,21 +1,32 @@
-import { fetchClient, UnauthorizedError } from "@/api/client";
-import { ACCESS_TOKEN_KEY } from "@/constants/auth";
-import { redirect } from "react-router";
+import { fetchClient } from "@/api/client";
+import { ACCESS_TOKEN_EXPIRED_AT_KEY, ACCESS_TOKEN_KEY } from "@/constants/auth";
+import { handleUnauthorizedError } from "@/lib/utils";
 
-function handleUnauthorizedError() {
-  const url = new URL('/login', location.origin);
-  url.searchParams.set("toastMessage", "Please login to continue");
-  url.searchParams.set("toastType", "error");
 
-  throw redirect(url.toString());
+export type MeResponse = {
+  readonly code:        string;
+  readonly description: string;
+  readonly data:        {
+    readonly id:          number;
+    readonly title:       string;
+    readonly firstname:   string;
+    readonly lastname:    string;
+    readonly isCommittee: boolean;
+    readonly expiredAt:   Date;
+  };
 }
 
 export async function requiredAuthLoader() {
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  const accessTokenExpiredAt = localStorage.getItem(ACCESS_TOKEN_EXPIRED_AT_KEY);
 
   if (!accessToken) {
     handleUnauthorizedError();
   } 
+
+  if (accessTokenExpiredAt && new Date(accessTokenExpiredAt) <= new Date()) {
+    handleUnauthorizedError();
+  }
 
   const res = await fetchClient.GET('/committee-workflow/authentication/me')
   
@@ -23,7 +34,5 @@ export async function requiredAuthLoader() {
     handleUnauthorizedError();
   }
 
-  console.log('res', res)
-
-  return res.data
+  return res.data as unknown as MeResponse;
 }

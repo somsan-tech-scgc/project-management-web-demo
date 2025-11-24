@@ -3,7 +3,6 @@ import {
   Links,
   Meta,
   Outlet,
-  redirect,
   Scripts,
   ScrollRestoration,
   useLocation,
@@ -17,9 +16,9 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { UnauthorizedError } from "./api/client";
 import { toast } from "sonner";
-import { ACCESS_TOKEN_KEY } from "./constants/auth";
 import { useEffect } from "react";
 import type { ToastType } from "./lib/utils";
+import { handleUnauthorizedError } from "./lib/utils";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -57,9 +56,7 @@ const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
       if (error instanceof UnauthorizedError && typeof window !== 'undefined') {
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        redirect("/login");
-        toast.error("Please login to continue");
+        handleUnauthorizedError();
       }
     },
   }),
@@ -117,12 +114,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
-    console.log("a");
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     message = "Wildcard error";
     details = error.message;
     stack = error.stack;
-    console.log("b");
   } else {
     message = "Unknown error";
   }

@@ -1,5 +1,8 @@
 import type { Schema } from "@/api/client";
+import { ACCESS_TOKEN_KEY, ACCESS_TOKEN_EXPIRED_AT_KEY } from "@/constants/auth";
 import { clsx, type ClassValue } from "clsx";
+import { redirect } from "react-router";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 const intl = new Intl.DateTimeFormat("en-US", {
@@ -68,4 +71,18 @@ export function buildToastLocationState(
     toastMessage: message,
     toastType: type,
   };
+}
+
+
+export function handleUnauthorizedError() {
+  localStorage.removeItem(ACCESS_TOKEN_KEY);
+  localStorage.removeItem(ACCESS_TOKEN_EXPIRED_AT_KEY);
+  
+  // const url = new URL('/login', location.origin);
+  // url.searchParams.set("toastMessage", "Please login to continue");
+  // url.searchParams.set("toastType", "error");
+
+  toast.error("Please login to continue");
+
+  throw redirect('/login');
 }
