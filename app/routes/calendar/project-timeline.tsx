@@ -184,17 +184,27 @@ export const ProjectTimeline = () => {
     []
   );
 
+  // Get stable reference to rows
+  const rows = projectListData?.rows;
+  
+  // Create a stable key from row IDs to detect actual data changes
+  const rowsKey = React.useMemo(
+    () => rows?.map((r: ProjectListRow) => r.id).join(",") ?? "",
+    [rows]
+  );
+
   // Map real project data with mock timeline
   const projects: ProjectData[] = React.useMemo(
     () =>
-      projectListData?.rows?.map((project: ProjectListRow) => ({
+      rows?.map((project: ProjectListRow) => ({
         projectName: project.name || "",
         comPhase: project.status || "",
         buName: project.department || "",
         pmName: "",
         timeline: mockTimelines[project.name || ""] || {},
       })) || [],
-    [projectListData]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rowsKey]
   );
 
   const table = useReactTable({
