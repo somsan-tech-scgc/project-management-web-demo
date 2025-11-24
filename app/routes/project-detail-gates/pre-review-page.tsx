@@ -6,12 +6,11 @@ import { useProjectDetail } from "@/hooks/use-project-detail";
 import { Button } from "@/components/ui/button";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 import { buildToastLocationState } from "@/lib/utils";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export const clientLoader = requiredAuthLoader;
 
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
+export const HydrateFallback = DefaultHydrateFallback;
 
 export default function PrePreviewPage() {
   const { id } = useParams();

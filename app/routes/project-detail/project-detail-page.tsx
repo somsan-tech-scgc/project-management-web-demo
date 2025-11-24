@@ -32,6 +32,7 @@ import { useCommittees } from "@/hooks/use-committee";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 import type { Route } from "../../+types/root";
 import { Spinner } from "@/components/ui/spinner";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 
 export const meta: Route.MetaFunction = () => {
@@ -41,6 +42,8 @@ export const meta: Route.MetaFunction = () => {
 };
 
 export const clientLoader = requiredAuthLoader;
+
+export const HydrateFallback = DefaultHydrateFallback;
 
 export default function ProjectDetailPage() {
   const { id } = useParams();

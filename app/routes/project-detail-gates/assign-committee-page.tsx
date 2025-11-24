@@ -7,12 +7,11 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "react-router";
 import { useProjectDetail } from "@/hooks/use-project-detail";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export const clientLoader = requiredAuthLoader;
 
-export const HydrateFallback = () => {
-  return <div>Loading...</div>;
-};
+export const HydrateFallback = DefaultHydrateFallback;
 
 export interface CommitteeMember {
   id: string;

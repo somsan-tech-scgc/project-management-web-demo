@@ -26,6 +26,7 @@ import { useCommittees } from "@/hooks/use-committee";
 import { Spinner } from "@/components/ui/spinner";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 import { useProjectList } from "@/hooks/use-project-list";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -35,9 +36,7 @@ export const meta: Route.MetaFunction = () => {
 
 export const clientLoader = requiredAuthLoader;
 
-export const HydrateFallback = () => {
-  return <Spinner />;
-};
+export const HydrateFallback = DefaultHydrateFallback;
 
 export default function ScheduleMeetingPage() {
   const [meetingTitle, setMeetingTitle] = useState("");

@@ -5,6 +5,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { parseAsStringLiteral, useQueryStates } from "nuqs";
 import { ReviewCalendar } from "./review-calendar";
 import { ProjectTimeline } from "./project-timeline";
+import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import { Spinner } from "@/components/ui/spinner";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 const TAB_MODES = ["project-timeline", "review-calendar"] as const;
 const TAB_MODE_LABELS = {
@@ -14,6 +17,9 @@ const TAB_MODE_LABELS = {
 
 const DEFAULT_VIEW_MODE = TAB_MODES[0];
 
+export const clientLoader = requiredAuthLoader;
+
+export const HydrateFallback = DefaultHydrateFallback;
 export default function CalendarPage() {
   const [queryStates, setQueryStates] = useQueryStates(
     {

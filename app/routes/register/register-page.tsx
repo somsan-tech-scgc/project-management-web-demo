@@ -2,6 +2,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 
 import { redirect } from "react-router";
 import { RegisterForm } from "./register-form";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export function meta() {
   return [
@@ -20,9 +21,7 @@ export async function clientLoader() {
 }
 
 // HydrateFallback is rendered while the client loader is running
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
+export const HydrateFallback = DefaultHydrateFallback;
 
 export default function LoginPage() {
   return (

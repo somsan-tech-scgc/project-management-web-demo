@@ -1,10 +1,8 @@
-import { Bell, Calendar, Calendar1, CalendarCheck2, CalendarCheck2Icon, LayoutDashboard, User } from "lucide-react";
+import { Bell, Calendar, CalendarCheck2Icon, LayoutDashboard, User } from "lucide-react";
 import type { ComponentProps } from "react";
-import { Link, Outlet, useNavigate } from "react-router";
+import { Link, Outlet } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { UnauthorizedError } from "@/api/client";
-import type { Route } from "../+types/root";
 import { useLogout } from "@/hooks/use-logout";
 import {
   AlertDialog,
@@ -16,15 +14,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { requiredAuthLoader } from "@/loaders/required-auth-loader";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 export type LayoutRootProps = ComponentProps<"main">;
 
 // export const clientLoader = requiredAuthLoader;
 
 // HydrateFallback is rendered while the client loader is running
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
+export const HydrateFallback = DefaultHydrateFallback;
 
 export default function LayoutRoot({ children, ...rest }: LayoutRootProps) {
   return (

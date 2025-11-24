@@ -2,6 +2,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 
 import { LoginForm } from "./login-form";
 import { redirect } from "react-router";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export async function clientLoader() {
   const accessToken = localStorage.getItem("accessToken");
@@ -13,10 +14,7 @@ export async function clientLoader() {
   return null;
 }
 
-// HydrateFallback is rendered while the client loader is running
-export function HydrateFallback() {
-  return <div>Loading...</div>;
-}
+export const HydrateFallback = DefaultHydrateFallback;
 
 export default function LoginPage() {
   return (

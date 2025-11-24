@@ -15,6 +15,8 @@ import { ProjectCard } from "./project-card";
 import { useProjectList, type ProjectListRow } from "@/hooks/use-project-list";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 import { ProjectListTable } from "./project-list-table";
+import { Spinner } from "@/components/ui/spinner";
+import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export function meta() {
   return [{ title: "Dashboard" }];
@@ -24,9 +26,7 @@ const VIEW_MODE = ["grid", "list"] as const;
 
 export const clientLoader = requiredAuthLoader;
 
-export function HydrateFallback() {
-  return <div>Loading...</div>
-}
+export const HydrateFallback = DefaultHydrateFallback;
 
 const Index = () => {
   const projectList = useProjectList();
