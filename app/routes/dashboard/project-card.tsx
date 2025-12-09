@@ -58,8 +58,8 @@ export function ProjectCard({
             </p>
           </div>
           <Badge variant="default">
-            Gate {projectDetail?.projectDetail?.gateLevel ?? ""} -{" "}
-            {projectDetail?.gateSteps?.[currentGateLevel!]?.name ?? ""}
+            Gate {currentGateLevel ?? ""} -{" "}
+            {projectDetail?.gateSteps?.[currentGateLevel-1!]?.name ?? ""}
             {/* {PROJECT_STATUS[status]} */}
           </Badge>
         </div>
