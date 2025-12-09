@@ -100,14 +100,21 @@ export default function ProjectDetailPage() {
       title: "Mr.",
       firstName: "Sara",
       lastName: "Chen",
-      role: "Engineer Manager",
+      role: "PM",
     },
     {
-      id: 1,
+      id: 2,
       title: "Mr.",
       firstName: "David",
       lastName: "Lee",
-      role: "Engineer Manager",
+      role: "Technical Lead",
+    },
+    {
+      id: 3,
+      title: "Mr.",
+      firstName: "James",
+      lastName: "Rodriguez",
+      role: "BD",
     },
   ];
   return (
@@ -252,7 +259,7 @@ export default function ProjectDetailPage() {
                   {[
                     "Project Proposal",
                     "Technical Specifications",
-                    "Cost Breakdown"
+                    "Cost Breakdown",
                   ].map((doc) => (
                     <div key={doc} className="flex items-center gap-3">
                       <Checkbox
@@ -312,9 +319,15 @@ export default function ProjectDetailPage() {
                   >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                        {/* <AvatarFallback className="bg-primary text-primary-foreground text-xs">
                           {committee.firstName}
-                        </AvatarFallback>
+                        </AvatarFallback> */}
+                        <img
+                          src={`/people${index + 1}.png`}
+                          alt={committee.firstName}
+                          className="h-10 w-10"
+                          loading="lazy"
+                        />
                       </Avatar>
                       <div>
                         <p className="font-medium">
@@ -326,8 +339,7 @@ export default function ProjectDetailPage() {
                         </p>
                       </div>
                     </div>
-                    {index === 0 && getStatusBadge(3)}
-                    {index === 1 && getStatusBadge(1)}
+                    {getStatusBadge([1,2,3][index % 3])}
                   </div>
                 ))}
               </div>
