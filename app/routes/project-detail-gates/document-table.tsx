@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { useState } from "react";
+import { useProjectDetail } from "@/hooks/use-project-detail";
 
 interface Document {
   name: string;
@@ -15,14 +16,21 @@ interface Document {
   status: "Approved" | "Pending" | "Rejected";
 }
 
-const initialDocuments: Document[] = [
-  { name: "Project Proposal", version: "1.2", status: "Approved" },
-  { name: "Technical Specifications", version: "2.0", status: "Pending" },
-  { name: "Risk Assessment Report", version: "1.0", status: "Approved" },
-];
+
 
 export const DocumentTable = () => {
-  const [documents, setDocuments] = useState<Document[]>(initialDocuments);
+  const projectDetailQuery = useProjectDetail(1);
+  const projectDetail = projectDetailQuery.data;
+  const initialDocuments = projectDetail?.documents ?? [];
+  const [documents, setDocuments] = useState<Document[]>(
+    initialDocuments.map((doc) => ({
+      name: doc.name,
+      version: "1.0",
+      status: ["Pending", "Approved", "Rejected"][
+        Math.floor(Math.random() * 3)
+      ],
+    }))
+  );
 
   const handleStatusChange = (index: number, newStatus: Document["status"]) => {
     const newDocuments = [...documents];
@@ -80,7 +88,10 @@ export const DocumentTable = () => {
                   </Select>
                 </td>
                 <td className="py-4 px-4">
-                  <Link to={`https://www.rd.go.th/fileadmin/user_upload/kormor/newlaw/moftopuptax1A.pdf`} target="_blank">
+                  <Link
+                    to={`https://www.rd.go.th/fileadmin/user_upload/kormor/newlaw/moftopuptax1A.pdf`}
+                    target="_blank"
+                  >
                     <Button variant="link" className="h-auto p-0 text-primary">
                       View
                     </Button>
