@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-export const GateChecklist = () => {
+export const GateChecklist = ({ gateLevel }: { gateLevel: number }) => {
   const [checks, setChecks] = useState({
     documents: false,
     quality: false,
@@ -17,7 +17,7 @@ export const GateChecklist = () => {
   return (
     <div className="bg-card rounded-lg border border-border p-6">
       <h2 className="text-lg font-semibold mb-4 text-foreground">
-        Gate 3 Checklist
+        Gate {gateLevel} Checklist
       </h2>
 
       <div className="space-y-4 mb-6">

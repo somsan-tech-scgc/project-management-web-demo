@@ -37,7 +37,7 @@ export default function PrePreviewPage() {
       </div>
       <div className="space-y-6">
         <DocumentTable />
-        <GateChecklist />
+        <GateChecklist gateLevel={project.projectDetail.gateLevel} />
         <GateDecision />
 
         <div className="flex gap-3 mt-6 justify-end">

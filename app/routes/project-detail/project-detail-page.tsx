@@ -34,11 +34,8 @@ import type { Route } from "../../+types/root";
 import { Spinner } from "@/components/ui/spinner";
 import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
-
 export const meta: Route.MetaFunction = () => {
-  return [
-    { title: "Project Detail" },
-  ];
+  return [{ title: "Project Detail" }];
 };
 
 export const clientLoader = requiredAuthLoader;
@@ -252,17 +249,21 @@ export default function ProjectDetailPage() {
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4">Checklist</h2>
                 <div className="space-y-3">
-                  {project?.documents?.map((doc) => (
-                    <div key={doc.id} className="flex items-center gap-3">
+                  {[
+                    "Project Proposal",
+                    "Technical Specifications",
+                    "Cost Breakdown"
+                  ].map((doc) => (
+                    <div key={doc} className="flex items-center gap-3">
                       <Checkbox
-                        id={`task-${doc.id}`}
+                        id={`task-${doc}`}
                         // checked={item.completed}
                       />
                       <label
-                        htmlFor={`task-${doc.id}`}
+                        htmlFor={`task-${doc}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
-                        {doc.checkListText ?? doc.name}
+                        {doc}
                       </label>
                     </div>
                   ))}
