@@ -5,11 +5,13 @@ import { redirect } from "react-router";
 import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
 
 export async function clientLoader() {
-  const accessToken = localStorage.getItem("accessToken");
+  // const accessToken = localStorage.getItem("accessToken");
 
-  if (accessToken) {
-    return redirect("/");
-  }
+  // if (accessToken) {
+  //   return redirect("/");
+  // }
+
+  redirect("/");
 
   return null;
 }
