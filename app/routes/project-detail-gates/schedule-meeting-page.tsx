@@ -27,6 +27,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { requiredAuthLoader } from "@/loaders/required-auth-loader";
 import { useProjectList } from "@/hooks/use-project-list";
 import { DefaultHydrateFallback } from "@/components/default-hydrate-fallback";
+import { useProjectDetail } from "@/hooks/use-project-detail";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -53,6 +54,9 @@ export default function ScheduleMeetingPage() {
   const { data: projectsQuery, isLoading: isLoadingProjects } = useProjectList();
   const projects = projectsQuery?.rows ?? [];
   const navigate = useNavigate();
+  const projectDetailQuery = useProjectDetail(project);
+  const projectDetail = projectDetailQuery.data;
+  const gates = projectDetail?.gateSteps ?? [];
 
   const toggleCommitteeSelection = (committee: any) => {
     setSelectedCommittees((prev) => {
@@ -131,12 +135,12 @@ export default function ScheduleMeetingPage() {
             <Label htmlFor="gate">Gate</Label>
             <Select value={gate} onValueChange={setGate}>
               <SelectTrigger id="gate" className="bg-card">
-                <SelectValue placeholder="Gate 1 Review" />
+                <SelectValue placeholder="Select gate" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="gate1">Gate 1 Review</SelectItem>
-                <SelectItem value="gate2">Gate 2 Review</SelectItem>
-                <SelectItem value="gate3">Gate 3 Review</SelectItem>
+                {gates.map((gate) => (
+                  <SelectItem key={gate.id} value={String(gate.id)}>Gate {gate.id} | {gate.name}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

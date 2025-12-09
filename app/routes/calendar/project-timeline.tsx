@@ -53,47 +53,47 @@ const timelineHeaders = [
 
 // Mock timeline data
 const mockTimelines: Record<string, Record<string, string>> = {
-  "Project Eagle": {
+  0: {
     "Mar 25\nW1-2": "G3",
     "Jul 25\nW1-2": "G4",
     "Oct 25\nW1-2": "G5",
     "Jan 26\nW1-2": "G6",
   },
-  "Project Titan": {
+  1: {
     "Jul 25\nW1-2": "G3",
     "Sep 25\nW3-4": "G4",
     "Dec 25\nW1-2": "G5",
     "Mar 26\nW1-2": "G6",
   },
-  "Project Alpha": {
+  2: {
     "Aug 25\nW3-4": "G3",
     "Nov 25\nW1-2": "G4",
     "Jan 26\nW1-2": "G5",
     "Feb 26\nW3-4": "G6",
   },
-  "Project Beta": {
+  3: {
     "Jul 26\nW3-4": "G3",
     "Sep 25\nW1-2": "G4",
     "Nov 25\nW1-2": "G5",
     "Feb 26\nW1-2": "G6",
   },
-  "Project Gamma": {
+  4: {
     "Sep 25\nW1-2": "G3",
     "Oct 25\nW1-2": "G4",
     "Dec 25\nW3-4": "G5",
     "Feb 26\nW3-4": "G6",
   },
-  "Project Delta": {
+  5: {
     "Aug 25\nW3-4": "G4",
     "Nov 25\nW1-2": "G5",
     "Feb 26\nW1-2": "G6",
   },
-  "Project Sigma": {
+  6: {
     "Jul 25\nW1-2": "G3",
     "Oct 25\nW1-2": "G4",
     "Jan 26\nW1-2": "G5",
   },
-  "Project Omega": {
+  7: {
     "Sep 25\nW3-4": "G3",
     "Dec 25\nW1-2": "G4",
     "Feb 26\nW1-2": "G5",
@@ -195,12 +195,12 @@ export const ProjectTimeline = () => {
   // Map real project data with mock timeline
   const projects: ProjectData[] = React.useMemo(
     () =>
-      rows?.map((project: ProjectListRow) => ({
+      rows?.map((project: ProjectListRow, index: number) => ({
         projectName: project.name || "",
         comPhase: project.status || "",
         buName: project.department || "",
         pmName: "",
-        timeline: mockTimelines[project.name || ""] || {},
+        timeline: mockTimelines[index] || {},
       })) || [],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [rowsKey]
