@@ -59,8 +59,15 @@ export function GanttChart() {
     text: project.name,
     start: new Date(project.startDate),
     end: new Date(project.endDate),
-    duration: durationToDays(project.endDate ? new Date(project.endDate).getTime() - new Date(project.startDate).getTime() : 0),
-    progress: project.currentGateLevel ? project.currentGateLevel / (project.totalGate ?? 1) : 0,
+    duration: durationToDays(
+      project.endDate
+        ? new Date(project.endDate).getTime() -
+            new Date(project.startDate).getTime()
+        : 0
+    ),
+    progress: project.currentGateLevel
+      ? project.currentGateLevel / (project.totalGate ?? 1)
+      : 0,
     type: "task",
     lazy: true,
   }));
@@ -69,12 +76,35 @@ export function GanttChart() {
 
   const scales = [
     { unit: "month", step: 1, format: "MMMM yyy" },
-    { unit: "day", step: 1, format: "d" },
+    // { unit: "day", step: 1, format: "d" },
   ];
 
   return (
     <Willow>
-      <Gantt tasks={tasks} links={links} scales={scales} />
+      <Gantt
+        tasks={tasks}
+        links={links}
+        scales={scales}
+        columns={[
+          {
+            header: "Project Name",
+            'id': 'text',
+          },
+          {
+            header: "Start Date",
+            'id': 'start',
+          },
+          {
+            header: "End Date",
+            'id': 'end',
+          },
+          {
+            header: "Duration",
+            'id': 'duration',
+          }
+        ]}
+        readonly
+      />
     </Willow>
   );
 }

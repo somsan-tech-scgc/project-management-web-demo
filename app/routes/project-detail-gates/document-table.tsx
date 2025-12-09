@@ -80,7 +80,7 @@ export const DocumentTable = () => {
                   </Select>
                 </td>
                 <td className="py-4 px-4">
-                  <Link to={`https://ratchakitcha.soc.go.th/documents/95562.pdf`} target="_blank">
+                  <Link to={`https://www.rd.go.th/fileadmin/user_upload/kormor/newlaw/moftopuptax1A.pdf`} target="_blank">
                     <Button variant="link" className="h-auto p-0 text-primary">
                       View
                     </Button>
